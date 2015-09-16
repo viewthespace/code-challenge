@@ -1,6 +1,6 @@
 ### Week 1 Coding Challenge - Valid Sudoku
 
-Given a partially filled matrix (2d array), check if valid (http://sudoku.com.au/TheRules.aspx)
+Given a partially filled matrix (2d array), check if valid (http://sudoku.com.au/TheRules.aspx). We're not testing if the board is currently solvable.
 
 #### Example Test Cases
 
