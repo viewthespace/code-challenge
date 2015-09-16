@@ -4,7 +4,7 @@ Each directory has a README.md describing the challenge. Solutions are places in
 
 Rules:
 
-* No Cheating, i.e., no peeking at implemented solutions on here or on the web.
+* No cheating, i.e., no peeking at implemented solutions on here or on the web.
 * All languages are welcome
 * Your solution must pass the base test cases I provide
 * In a comment within your solution file, you must describe your solutions runtime and memory in big o notation
