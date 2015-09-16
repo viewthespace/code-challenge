@@ -1,6 +1,6 @@
 # Weekly VTS Coding Challenge
 
-Each directory has a README.md describing the challenge. Solutions are places inside the directory in format `solution_<initals>.<ext>`
+Each directory has a README.md describing the challenge. Solutions are placed inside the directory in format `solution_<initals>.<ext>`
 
 Rules:
 
