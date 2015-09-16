@@ -8,3 +8,5 @@ Rules:
 * All languages are welcome.
 * Your solution must pass the base test cases I provide.
 * In a comment within your solution file, you must describe your solutions runtime and memory in big o notation.
+
+Submit your solutions **only** on Thursday nights!
