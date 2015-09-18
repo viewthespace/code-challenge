@@ -8,7 +8,7 @@ var isValidSudoku = function(board) {
       var rowUnique = 0;
       for(var j = 0; j < 9; j++){
         var val = board[i][j];
-        if (val === '.') continue;
+        if (!val) continue;
         rowUnique ^= 1 << val;
         colUnique[j] ^= 1 << val;
         var gridIndex = ((i / 3) >> 0) * 3 + ((j / 3) >> 0);
