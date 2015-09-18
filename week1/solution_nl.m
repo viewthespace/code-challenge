@@ -162,12 +162,9 @@
             NSNumber *currentNumber = row[columnIndex];
             //0 is undefined - doesnt count towards anything
             if(currentNumber > [NSNumber numberWithInt:0]) {
-                if(rowIndex == 0 && columnIndex == 8) {
-                    NSLog(@"break");
-                }
+
                 //will find invalid columns
                 if([thisColumnsIntegers containsObject:row[columnIndex]]) {
-                    NSLog(@"This columnsIntegers: %@", thisColumnsIntegers);
                     return NO;
                 }
                 else {
