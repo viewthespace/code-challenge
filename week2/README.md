@@ -35,11 +35,11 @@ function wigglechecker(nums){
     next = nums[i + 1];
     if(i % 2 === 0){
       if(typeof prev === 'undefined') prev = Number.POSITIVE_INFINITY;
-      if(typeof next === 'undefined') prev = Number.POSITIVE_INFINITY;
+      if(typeof next === 'undefined') next = Number.POSITIVE_INFINITY;
       if(num > next || num > prev) return false;
     }else{
       if(typeof prev === 'undefined') prev = Number.NEGATIVE_INFINITY;
-      if(typeof next === 'undefined') prev = Number.NEGATIVE_INFINITY;
+      if(typeof next === 'undefined') next = Number.NEGATIVE_INFINITY;
       if(num < next || num < prev) return false;
     }
   }
