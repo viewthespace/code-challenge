@@ -1,6 +1,6 @@
 ### Week 2 Coding Challenge - Wiggle Sort
 
-Given an unsorted array of Integers, reorder them numbers such that:
+Given an unsorted array of Integers, reorder them such that:
 
 ```
 nums[0] <= nums[1] >= nums[2] <= nums[3]...
