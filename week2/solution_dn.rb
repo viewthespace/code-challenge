@@ -5,7 +5,6 @@ class Array
     self
   end
 
-
   # Traverses the array once O(n), but must sort it first.
   # Ruby uses quicksort O(nlogn) so solution is O(nlogn)
   def wiggle!
