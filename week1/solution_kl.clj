@@ -9,7 +9,7 @@
   (map flatten (partition 3 (cols rows))))
 
 (defn regions [board]
-  (apply concat (map regions-row (partition 3 board))))
+  (mapcat regions-row (partition 3 board)))
 
 (defn valid-board? [board]
   (every? valid? (concat board (cols board) (regions board))))
