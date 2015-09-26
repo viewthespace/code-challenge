@@ -1,52 +1,31 @@
-;partial solution - blows up on rows/columns that contain all nils
-
-(defn row [board n]
-  (get board n))
-
-(defn board-size [board]
-  (count (get board 0)))
+(defn valid? [group]
+  (def values (remove nil? group))
+  (if (empty? values) true (apply distinct? values)))
 
 (defn cols [board]
-  (map #(col board %) (range 0 board-size)))
+  (partition (count board) (apply interleave board)))
 
-(defn col [board n]
-  ; (map #(get-in board [% n]) (range 1 10)))
-  (map #(get % n) board))
+(defn regions-row [rows]
+  (map flatten (partition 3 (cols rows))))
 
-;partially implemented
-(defn region [board n]
-  (def region-size 3)
-  (get-in board []))
-
-(defn region-coords-from-position [region]
-  (def grid-size 3)
-  [(quot region grid-size) (mod region grid-size)])
-
-(defn region-from-offset [offset])
-(defn region-offset [n])
-
-(defn valid? [group]
-  (println group)
-  (def values (filter #(not (nil? %)) group))
-  ;this blows up when a group has all nils
-  ;because apply tries to call distinct? with no args
-  (if-not (empty? values)
-    (apply distinct? values)))
-
-;not implemented
-(defn check-regions[board])
+(defn regions [board]
+  (apply concat (map regions-row (partition 3 board))))
 
 (defn valid-board? [board]
-  (every? identity
-    [(every? valid? board) ;check all rows
-    (every? valid? cols) ;check all columns
-    (check-regions board)]))
+  (every? valid? (concat board (cols board) (regions board))))
 
-;valid input board
-(def valid1 [
-    [nil nil nil    nil nil nil     1   7   4]
-    [nil nil nil    nil nil nil     2   8   5]
-    [nil nil nil    nil nil nil     3   9   6]
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Test cases
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;tests
+;(map valid-board? (concat valid-inputs invalid-inputs))
+
+(def valid-inputs [
+  [
+    [nil nil nil    nil nil nil     1   7   4 ]
+    [nil nil nil    nil nil nil     2   8   5 ]
+    [nil nil nil    nil nil nil     3   9   6 ]
 
     [nil nil nil     1   2   3     nil nil nil]
     [nil nil nil    nil nil nil    nil nil nil]
@@ -55,6 +34,73 @@
     [ 1   2   4      5   6   7      8   3   9 ]
     [nil nil nil    nil nil nil    nil nil nil]
     [nil nil nil    nil nil nil    nil nil nil]
-  ])
+  ]
 
-(valid-board? valid1)
+  [
+    [nil nil nil    nil nil nil    nil nil nil]
+    [nil nil nil    nil nil nil    nil nil nil]
+    [nil nil nil    nil nil nil    nil nil nil]
+
+    [nil nil nil    nil nil nil    nil nil nil]
+    [nil nil nil    nil nil nil    nil nil nil]
+    [nil nil nil    nil nil nil    nil nil nil]
+
+    [nil nil nil    nil nil nil    nil nil nil]
+    [nil nil nil    nil nil nil    nil nil nil]
+    [nil nil nil    nil nil nil    nil nil nil]
+  ]
+
+  [
+    [ 1   9  nil    nil nil nil    nil nil  8 ]
+    [ 2   8  nil    nil  9  nil    nil nil nil]
+    [ 3   7  nil    nil nil nil    nil nil nil]
+    [ 4  nil nil    nil nil nil    nil nil nil]
+    [ 5  nil nil    nil  1  nil    nil nil nil]
+    [ 6  nil nil    nil  2  nil    nil nil nil]
+    [ 7   3  nil    nil nil nil    nil nil nil]
+    [ 8   2  nil    nil nil nil    nil nil nil]
+    [ 9   1  nil    nil nil nil    nil nil  4 ]
+  ]])
+
+(def invalid-inputs [
+  [
+    [nil nil nil    nil nil nil     1   7   9 ]
+    [nil nil nil    nil nil nil     2   8   5 ]
+    [nil nil nil    nil nil nil     3   4   6 ]
+
+    [nil nil nil     1   2   3     nil nil nil]
+    [nil nil nil    nil nil nil    nil nil nil]
+    [nil nil nil    nil nil nil    nil nil nil]
+
+    [ 1   2   4      5   6   7      8   3   9 ]
+    [nil nil nil    nil nil nil    nil nil nil]
+    [nil nil nil    nil nil nil    nil nil nil]
+  ]
+
+  [
+    [nil nil nil    nil nil nil    nil nil nil]
+    [nil nil nil    nil nil nil    nil nil nil]
+    [nil nil nil    nil nil nil    nil nil nil]
+
+    [ 1  nil nil    nil nil nil    nil nil nil]
+    [nil nil nil    nil nil nil    nil nil nil]
+    [nil nil  1     nil nil nil    nil nil nil]
+
+    [nil nil nil    nil nil nil    nil nil nil]
+    [nil nil nil    nil nil nil    nil nil nil]
+    [nil nil nil    nil nil nil    nil nil nil]
+  ]
+
+  [
+    [ 1   9  nil    nil nil nil    nil nil  8 ]
+    [ 2   8  nil    nil  8  nil    nil nil nil]
+    [ 3   7  nil    nil nil nil    nil nil nil]
+
+    [ 4  nil nil    nil nil nil    nil nil nil]
+    [ 5  nil nil    nil  1  nil    nil nil nil]
+    [ 6  nil nil    nil  2  nil    nil nil nil]
+
+    [ 7   3  nil    nil nil nil    nil nil nil]
+    [ 8   2  nil    nil nil nil    nil nil nil]
+    [ 9   1  nil    nil nil nil    nil nil  4 ]
+  ]])
