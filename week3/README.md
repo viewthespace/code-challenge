@@ -4,7 +4,11 @@ Given an input string, reverse the string word by word. A word is defined as a s
 
 The input string does not contain leading or trailing spaces and the words are always separated by a single space.
 
-For example
+For example,
+Given s = "the sky is blue",
+return "blue is sky the".
+
+
 ``` Javascript
 /**
  * @param {character[]} str
