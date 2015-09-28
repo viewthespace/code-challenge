@@ -6,8 +6,12 @@ The input string does not contain leading or trailing spaces and the words are a
 
 For example
 ``` Javascript
-solution("the sky is blue")
-=> "blue is sky the"
+/**
+ * @param {character[]} str
+ */
+var reverseWords = function(str) {
+    
+};
 ```
 
 Bonus: Could you do it in-place without allocating extra space?
