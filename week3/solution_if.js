@@ -1,4 +1,4 @@
-// Runtime: O(1)
+// Runtime: O(N)
 // Memory: O(1)
 
 var reverseSentence = function(sentence) {
