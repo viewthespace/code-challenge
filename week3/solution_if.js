@@ -1,5 +1,5 @@
 // Runtime: O(N)
-// Memory: O(1)
+// Memory: O(1) (assuming we get an array of size N)
 
 var reverseSentence = function(sentence) {
   var word_start = 0;
