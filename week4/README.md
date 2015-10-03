@@ -49,7 +49,7 @@ The Users table holds all users. Each user has an unique Users_Id
 +----------+--------+--------+
 ```
 ### Installation is simple
-```
+``` Bash
 cd week4
 dropdb week4 > /dev/null 2>&1; createdb week4; psql -U viewthespace -d week4 -f ./public.sql
 ```
