@@ -1,6 +1,6 @@
 ### Week 4 Coding Challenge - SQL - Cancellation rate
 
-Write a SQL query to find the cancellation rate of requests made by unbanned clients between Oct 1, 2013 and Oct 3, 2013. For the above tables, your SQL query should return the following rows with the cancellation rate being rounded to two decimal places.
+Write a SQL query to find the cancellation rate of requests made by unbanned clients between Oct 1, 2013 and Oct 3, 2013. For the below tables, your SQL query should return the following rows with the cancellation rate being rounded to two decimal places.
 
 ```
 +------------+-------------------+
