@@ -1,5 +1,18 @@
 ### Week 4 Coding Challenge - SQL - Cancellation rate
 
+Write a SQL query to find the cancellation rate of requests made by unbanned clients between Oct 1, 2013 and Oct 3, 2013. For the below tables, your SQL query should return the following rows with the cancellation rate being rounded to two decimal places.
+
+```
++------------+-------------------+
+|     Day    | Cancellation Rate |
++------------+-------------------+
+| 2013-10-01 |       0.33        |
+| 2013-10-02 |       0.00        |
+| 2013-10-03 |       0.50        |
++------------+-------------------+
+```
+
+
 The Trips table holds all taxi trips. Each trip has a unique Id, while Client_Id and Driver_Id are both foreign keys to the Users_Id at the Users table.
 
 ```
@@ -35,15 +48,8 @@ The Users table holds all users. Each user has an unique Users_Id
 |    13    |   No   | driver |
 +----------+--------+--------+
 ```
-
-Write a SQL query to find the cancellation rate of requests made by unbanned clients between Oct 1, 2013 and Oct 3, 2013. For the above tables, your SQL query should return the following rows with the cancellation rate being rounded to two decimal places.
-
-```
-+------------+-------------------+
-|     Day    | Cancellation Rate |
-+------------+-------------------+
-| 2013-10-01 |       0.33        |
-| 2013-10-02 |       0.00        |
-| 2013-10-03 |       0.50        |
-+------------+-------------------+
+### Installation is simple
+``` Bash
+cd week4
+dropdb week4 > /dev/null 2>&1; createdb week4; psql -U viewthespace -d week4 -f ./public.sql
 ```
