@@ -48,8 +48,9 @@ The Users table holds all users. Each user has an unique Users_Id
 |    13    |   No   | driver |
 +----------+--------+--------+
 ```
-### Installation is simple
+### Installation
 ``` Bash
 cd week4
 dropdb week4 > /dev/null 2>&1; createdb week4; psql -U viewthespace -d week4 -f ./public.sql
+psql -U viewthespace week4
 ```
