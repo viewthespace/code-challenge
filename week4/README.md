@@ -2,7 +2,7 @@
 
 Write a SQL query to find the cancellation rate of requests made by unbanned clients between Oct 1, 2013 and Oct 3, 2013. For the below tables, your SQL query should return the following rows with the cancellation rate being rounded to two decimal places.
 
-Note: Googling sql techniqueus will probably be needed.
+Note: Googling SQL techniqueus will probably be needed.
 
 ```
 +------------+-------------------+
