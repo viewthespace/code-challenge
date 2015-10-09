@@ -15,4 +15,5 @@ SELECT
     trips AS t
   INNER JOIN
     users AS u ON u.id = t.client_id
-    AND u.banned = false GROUP BY day;
+    AND u.banned = false 
+  GROUP BY day;
