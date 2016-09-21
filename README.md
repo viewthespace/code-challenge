@@ -8,5 +8,6 @@ Rules:
 * All languages are welcome.
 * Your solution must pass the base test cases I provide.
 * In a comment within your solution file, you must describe your solutions runtime and memory in big o notation.
+* Post your solutions directly to this git repo.
 
-We'll talk about the solutions during the coding-challenge brownbag on Fridays.
+We'll talk about the solutions during the coding-challenge brownbag.
