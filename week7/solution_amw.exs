@@ -25,7 +25,6 @@ defmodule Matrix do
     2) Create a list of matrices that are transformed according to each combination
     3) Check the number of uniform rows in each of the tranformed matrices
     4) Find the max of all of those
-
   """
   def khan_box(matrix) do
     length(matrix)
@@ -36,7 +35,7 @@ defmodule Matrix do
   end
 
   @doc """
-  Given an an array of arrays of columns to flip, return a list
+  Given an an list of lists of columns to flip, return a list
   of all transformed matrices by flipping the respective columns
   """
   def all_transformations(all_columns_to_flip, matrix) do
@@ -46,7 +45,7 @@ defmodule Matrix do
   end
 
   @doc """
-  Given an array of columns to flip, return a transformed matrix
+  Given an list of columns to flip, return a transformed matrix
   by flipping the given columns
   """
   def single_transformation(matrix, columns_to_flip) do
@@ -85,8 +84,34 @@ defmodule Matrix do
 end
 
 defmodule Combinations do
+  @doc """
+  Generates a list of all combinations of columns that should be
+  flipped such that all possible states of transformed matrices can
+  be produced.
+
+  n is the size of a square matrix.
+
+  Returns a list where each element is a list of indexes that will
+  produce one transformed matrix.
+
+  Example:
+
+  A 2 x 2 matrix can have 4 possible flip states (1 means flipped):
+
+  0 0
+  0 1
+  1 0
+  1 1
+
+  For n = 2, this method will return:
+
+  [[0, 1], [0], [1], []]
+
+  Each of those elements signifies which column to flip for a given
+  flip state.
+  """
   def generate_flip_indexes(n) do
-    truth_table(n) |>
+    generate_flip_states(n) |>
     Enum.map(fn c ->
       Enum.with_index(c)
       |> Enum.filter(fn c -> elem(c, 0) == 0 end)
@@ -94,18 +119,29 @@ defmodule Combinations do
     end)
   end
 
-  def truth_table(n) do
+  # Generates truth-table like input values corresponding
+  # to all possible states of which columns are flipped, i.e.
+  #
+  # For a 2 x 2 matrix, it will generate:
+  #
+  # 0 0 => No columns flipped
+  # 0 1 => Rightmost column flipped
+  # 1 0 => Leftmost column flipped
+  # 1 1 => Both columns flipped
+  defp generate_flip_states(n) do
     num_rows = :math.pow(2, n) |> trunc
     Enum.map(0..num_rows-1, fn row ->
-      generate_row(row, 0, n, [])
+      bit_list_representation(row, 0, n, [])
     end)
   end
 
-  defp generate_row(_, n, n, acc), do: acc
+  defp bit_list_representation(_, n, n, acc), do: acc
 
-  defp generate_row(curr_row, curr_col, n, acc) do
+  # Returns a list of bits corresponding to the binary representation
+  # of the given curr_row
+  defp bit_list_representation(curr_row, curr_col, n, acc) do
     result = curr_row / :math.pow(2, curr_col) |> trunc |> rem(2)
-    generate_row(curr_row, curr_col + 1, n, [result|acc])
+    bit_list_representation(curr_row, curr_col + 1, n, [result|acc])
   end
 end
 
