@@ -20,6 +20,14 @@ end
 
 defmodule Matrix do
 
+  def khan_box(matrix) do
+    length(matrix)
+    |> Combinations.generate_flip_indexes
+    |> Matrix.all_transformations(matrix)
+    |> Enum.map(fn matrix -> Matrix.num_same_rows(matrix) end)
+    |> Enum.max
+  end
+
   def all_transformations(all_columns_to_flip, matrix) do
     Enum.map(all_columns_to_flip, fn columns_to_flip ->
       single_transformation(matrix, columns_to_flip)
@@ -29,8 +37,7 @@ defmodule Matrix do
   def single_transformation(matrix, columns_to_flip) do
     transposed = transpose(matrix)
     Enum.reduce(columns_to_flip, transposed, fn flip_column, acc ->
-      row = Enum.at(acc, flip_column)
-      inverted = Row.invert(row)
+      inverted = Enum.at(acc, flip_column) |> Row.invert
       List.replace_at(acc, flip_column, inverted)
     end)
     |> transpose
@@ -64,8 +71,8 @@ end
 
 defmodule Combinations do
   def generate_flip_indexes(n) do
-    combs = truth_table(n)
-    indexes = Enum.map(combs, fn c ->
+    truth_table(n) |>
+    Enum.map(fn c ->
       Enum.with_index(c)
       |> Enum.filter(fn c -> elem(c, 0) == 0 end)
       |> Enum.map(fn c -> elem(c, 1) end)
@@ -94,22 +101,12 @@ matrix =[
   [1, 0, 1, 1]
 ]
 
-same_matrix = [
-  [0, 0, 0, 0],
-  [1, 1, 1, 1],
-  [0, 1, 0, 1]
-]
-
 matrix2 = [
   [1, 1, 0],
   [0, 1, 1],
   [0, 1, 0]
 ]
 
-#IO.inspect Matrix.single_transformation(matrix, [2, 3])
-
-IO.inspect length(matrix2)
-|> Combinations.generate_flip_indexes
-|> Matrix.all_transformations(matrix2)
-|> Enum.map(fn matrix -> Matrix.num_same_rows(matrix) end)
-|> Enum.max
+IO.inspect Enum.map([matrix, matrix2], fn matrix ->
+  Matrix.khan_box(matrix)
+end)
