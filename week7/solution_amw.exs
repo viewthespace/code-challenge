@@ -5,10 +5,6 @@ defmodule Value do
 end
 
 defmodule Row do
-  def shift(row, n) do
-    Enum.drop(row, n) ++ Enum.take(row, n)
-  end
-
   def is_row_uniform?(row), do: row |> Enum.dedup |> length == 1
 
   def invert(column) do
@@ -24,30 +20,20 @@ end
 
 defmodule Matrix do
 
-  def matrix_transformations(matrix, all_columns_to_flip) do
+  def all_transformations(all_columns_to_flip, matrix) do
     Enum.map(all_columns_to_flip, fn columns_to_flip ->
-      matrix_transformation(matrix, columns_to_flip)
+      single_transformation(matrix, columns_to_flip)
     end)
   end
 
-  def matrix_transformation(matrix, columns_to_flip) do
+  def single_transformation(matrix, columns_to_flip) do
     transposed = transpose(matrix)
     Enum.reduce(columns_to_flip, transposed, fn flip_column, acc ->
-      row = Enum.at(transposed, flip_column)
+      row = Enum.at(acc, flip_column)
       inverted = Row.invert(row)
-      acc = List.replace_at(transposed, flip_column, inverted)
+      List.replace_at(acc, flip_column, inverted)
     end)
     |> transpose
-  end
-
-  def flip_column(matrix) do
-    Enum.map(matrix, &(flip_first_num(&1)))
-  end
-
-  def invert_column(matrix) do
-    columns = transpose(matrix)
-    [head|tail]= columns
-    Column.invert()
   end
 
   def append_columns([], new_columns) do
@@ -63,12 +49,6 @@ defmodule Matrix do
     Enum.reduce(matrix, [], fn row, acc ->
       append_columns(acc, Row.to_columns(row))
     end)
-  end
-
-  def flip_first_num(row) do
-    [head|tail] = row
-    flipped = Matrix.inverse(head)
-    [flipped|tail]
   end
 
   def num_same_rows(matrix) do
@@ -95,7 +75,7 @@ defmodule Combinations do
   def truth_table(n) do
     num_rows = :math.pow(2, n) |> trunc
     Enum.map(0..num_rows-1, fn row ->
-      new_row = generate_row(row, 0, n, [])
+      generate_row(row, 0, n, [])
     end)
   end
 
@@ -120,10 +100,16 @@ same_matrix = [
   [0, 1, 0, 1]
 ]
 
-IO.inspect Matrix.matrix_transformation(matrix, [0])
+matrix2 = [
+  [1, 1, 0],
+  [0, 1, 1],
+  [0, 1, 0]
+]
 
-# length(matrix)
-# |> Combinations.generate_flip_indexes
-# |> Matrix.generate_matrix_transformations
-# |> Enum.map(fn transformation -> transformation.())
-# |> Enum.max
+#IO.inspect Matrix.single_transformation(matrix, [2, 3])
+
+IO.inspect length(matrix2)
+|> Combinations.generate_flip_indexes
+|> Matrix.all_transformations(matrix2)
+|> Enum.map(fn matrix -> Matrix.num_same_rows(matrix) end)
+|> Enum.max
