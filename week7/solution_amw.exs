@@ -1,4 +1,3 @@
-# 2^n flips
 defmodule Value do
   def inverse(0), do: 1
   def inverse(1), do: 0
@@ -20,20 +19,36 @@ end
 
 defmodule Matrix do
 
+  @doc """
+  Entry point for the challenge. Sets up the following brute force pipeline:
+    1) Generate all combinations of indexes of columns that should be flipped
+    2) Create a list of matrices that are transformed according to each combination
+    3) Check the number of uniform rows in each of the tranformed matrices
+    4) Find the max of all of those
+
+  """
   def khan_box(matrix) do
     length(matrix)
     |> Combinations.generate_flip_indexes
-    |> Matrix.all_transformations(matrix)
-    |> Enum.map(fn matrix -> Matrix.num_same_rows(matrix) end)
+    |> all_transformations(matrix)
+    |> Enum.map(fn matrix -> num_uniform_rows(matrix) end)
     |> Enum.max
   end
 
+  @doc """
+  Given an an array of arrays of columns to flip, return a list
+  of all transformed matrices by flipping the respective columns
+  """
   def all_transformations(all_columns_to_flip, matrix) do
     Enum.map(all_columns_to_flip, fn columns_to_flip ->
       single_transformation(matrix, columns_to_flip)
     end)
   end
 
+  @doc """
+  Given an array of columns to flip, return a transformed matrix
+  by flipping the given columns
+  """
   def single_transformation(matrix, columns_to_flip) do
     transposed = transpose(matrix)
     Enum.reduce(columns_to_flip, transposed, fn flip_column, acc ->
@@ -43,11 +58,11 @@ defmodule Matrix do
     |> transpose
   end
 
-  def append_columns([], new_columns) do
+  defp append_columns([], new_columns) do
     [] ++ new_columns
   end
 
-  def append_columns(existing_columns, new_columns) do
+  defp append_columns(existing_columns, new_columns) do
     Enum.zip(existing_columns, new_columns)
     |> Enum.map(fn t -> elem(t, 0) ++ elem(t, 1) end)
   end
@@ -58,14 +73,14 @@ defmodule Matrix do
     end)
   end
 
-  def num_same_rows(matrix) do
+  defp num_uniform_rows(matrix) do
     Enum.reduce(matrix, 0, fn row, acc ->
       Row.is_row_uniform?(row) |> num_rows(acc)
     end)
   end
 
-  def num_rows(true, acc), do: acc + 1
-  def num_rows(false, acc), do: acc
+  defp num_rows(true, acc), do: acc + 1
+  defp num_rows(false, acc), do: acc
 
 end
 
