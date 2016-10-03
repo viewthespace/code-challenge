@@ -4,10 +4,8 @@ defmodule KhanBox do
   def khan_box(matrix) do
     Enum.reduce(matrix, %{}, fn(row, counter) ->
       key = row_key(row)
-      update_counter(key, Map.get(counter, key), counter)
-    end)
-    |> Map.values
-    |> Enum.max
+      update_counter(key, counter[key], counter)
+    end) |> Map.values |> Enum.max
   end
 
   def update_counter(k, nil, counter), do: Map.put(counter, k, 1)
