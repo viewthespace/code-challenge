@@ -5,12 +5,12 @@ defmodule Matrix do
     columns = length(matrix)
     Enum.to_list(0..columns - 1)
     |> powerset
-    |> Enum.map(&(single_transformation(matrix, &1)))
+    |> Enum.map(&(flip_column_combination(matrix, &1)))
     |> Enum.map(&num_uniform_rows/1)
     |> Enum.max
   end
 
-  def single_transformation(matrix, columns_to_flip) do
+  def flip_column_combination(matrix, columns_to_flip) do
     Enum.map(matrix, fn row ->
       Enum.with_index(row) |> Enum.map(fn row_idx ->
         value_for(elem(row_idx, 0), elem(row_idx, 1) in columns_to_flip)
@@ -22,7 +22,7 @@ defmodule Matrix do
   def value_for(v, false), do: v
 
   def num_uniform_rows(matrix) do
-    Enum.filter(matrix, &is_row_uniform?/1)  |> length
+    Enum.filter(matrix, &is_row_uniform?/1) |> length
   end
 
   def is_row_uniform?(row), do: row |> Enum.dedup |> length == 1
