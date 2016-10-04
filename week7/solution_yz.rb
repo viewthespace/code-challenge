@@ -1,6 +1,6 @@
 # khan_box_common_rows()
 # Runtime: O( N^2 ), N being the height and width of the box
-# Memory: O( N )
+# Memory: O( N*LOG(N) ), where Log_2(N) is the memory footprint of a row bitmask
 
 def khan_box_common_rows(input)
   input.map do |row|
