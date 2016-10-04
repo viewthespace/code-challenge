@@ -58,17 +58,6 @@ matrix2 = [
   [0, 1, 0]
 ]
 
-big = [
-  [0, 1, 1, 0, 0, 1, 1, 0],
-  [0, 1, 1, 0, 0, 1, 1, 0],
-  [0, 1, 0, 0, 0, 1, 1, 0],
-  [0, 1, 1, 0, 1, 1, 1, 0],
-  [0, 1, 1, 0, 0, 1, 1, 0],
-  [0, 1, 1, 0, 0, 1, 1, 0],
-  [0, 1, 1, 0, 1, 1, 0, 0],
-  [0, 1, 1, 0, 0, 1, 1, 0]
-]
-
-IO.inspect Enum.map([matrix, matrix2, big], fn matrix ->
+IO.inspect Enum.map([matrix, matrix2], fn matrix ->
   Matrix.khan_box(matrix)
 end)
