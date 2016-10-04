@@ -25,16 +25,11 @@ defmodule Matrix do
   def value_for(v, true), do: bxor(v, 1)
   def value_for(v, false), do: v
 
-  defp num_uniform_rows(matrix) do
-    Enum.reduce(matrix, 0, fn row, acc ->
-      is_row_uniform?(row) |> num_rows(acc)
-    end)
+  def num_uniform_rows(matrix) do
+    Enum.filter(matrix, &is_row_uniform?/1)  |> length
   end
 
   def is_row_uniform?(row), do: row |> Enum.dedup |> length == 1
-
-  defp num_rows(true, acc), do: acc + 1
-  defp num_rows(false, acc), do: acc
 
   def powerset([]), do: [[]]
   def powerset([h|t]) do
