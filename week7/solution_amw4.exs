@@ -2,8 +2,9 @@ defmodule Matrix do
   use Bitwise
 
   def khan_box(matrix) do
-    length(matrix)
-    |> Combinations.generate_flip_indexes
+    columns = length(matrix)
+    Enum.to_list(0..columns - 1)
+    |> powerset
     |> all_transformations(matrix)
     |> Enum.map(fn matrix -> num_uniform_rows(matrix) end)
     |> Enum.max
@@ -26,7 +27,7 @@ defmodule Matrix do
 
   defp num_uniform_rows(matrix) do
     Enum.reduce(matrix, 0, fn row, acc ->
-      Row.is_row_uniform?(row) |> num_rows(acc)
+      is_row_uniform?(row) |> num_rows(acc)
     end)
   end
 
@@ -35,35 +36,12 @@ defmodule Matrix do
   defp num_rows(true, acc), do: acc + 1
   defp num_rows(false, acc), do: acc
 
-end
-
-defmodule Combinations do
-  def generate_flip_indexes(n) do
-    generate_flip_states(n) |>
-    Enum.map(fn c ->
-      Enum.with_index(c)
-      |> Enum.filter(fn c -> elem(c, 0) == 0 end)
-      |> Enum.map(fn c -> elem(c, 1) end)
-    end)
+  def powerset([]), do: [[]]
+  def powerset([h|t]) do
+    powerset_tail = powerset(t)
+    (for n <- powerset_tail, do: [h|n]) ++ powerset_tail
   end
 
-  def generate_flip_states(n) do
-    num_rows = :math.pow(2, n) |> trunc
-    Enum.map(0..num_rows-1, fn row ->
-      bit_list_representation(row, n)
-    end)
-  end
-
-  def bit_list_representation(n, bits) do
-    bit_list_representation(n, 0, bits, [])
-  end
-
-  def bit_list_representation(_, n, n, acc), do: acc
-
-  def bit_list_representation(curr_row, curr_col, n, acc) do
-    result = curr_row / :math.pow(2, curr_col) |> trunc |> rem(2)
-    bit_list_representation(curr_row, curr_col + 1, n, [result|acc])
-  end
 end
 
 matrix =[
