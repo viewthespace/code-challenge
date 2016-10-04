@@ -5,13 +5,9 @@ defmodule Matrix do
     columns = length(matrix)
     Enum.to_list(0..columns - 1)
     |> powerset
-    |> all_transformations(matrix)
-    |> Enum.map(fn matrix -> num_uniform_rows(matrix) end)
+    |> Enum.map(&(single_transformation(matrix, &1)))
+    |> Enum.map(&num_uniform_rows/1)
     |> Enum.max
-  end
-
-  def all_transformations(flip_indexes, matrix) do
-    Enum.map(flip_indexes, &(single_transformation(matrix, &1)))
   end
 
   def single_transformation(matrix, columns_to_flip) do
