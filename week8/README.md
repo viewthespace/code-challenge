@@ -8,6 +8,7 @@ Caveats:
 - Imagine water flows from high to low. Given that a point has multiple
 different neighbor points that are lower than itself, it is considered part
 of the basin that the lowest neighbor is a part of.
+- Water only flows to its lowest neighbor
 - You do not have to output the partitions themselves, only the size of the
 basins.
 - Extra points if you do it in N time
