@@ -16,7 +16,7 @@ def min_neighbor_coords(neighbor_coords, matrix)
   neighbor_coords[values.index(values.min)]
 end
 
-def go_downstream(curr_point, matrix, curr_basin, basin_counts, basin_map)
+def go_downstream(curr_point, matrix, basin_counts, basin_map)
   return basin_map[curr_point] if basin_map.has_key?(curr_point)
 
   neighbor_coords = neighbor_coords(curr_point, matrix)
@@ -28,7 +28,7 @@ def go_downstream(curr_point, matrix, curr_basin, basin_counts, basin_map)
     $curr_basin += 1
     basin_map[curr_point]
   else
-    basin = go_downstream(min_point, matrix, $curr_basin, basin_counts, basin_map)
+    basin = go_downstream(min_point, matrix, basin_counts, basin_map)
     basin_map[curr_point] = basin
     basin_counts[basin] += 1
     basin
@@ -54,7 +54,7 @@ $curr_basin = 0
 basin_map = {}
 matrix.each_with_index do |row, i|
   row.each_with_index do |element, j|
-    go_downstream([i, j], matrix, $curr_basin, basin_counts, basin_map)
+    go_downstream([i, j], matrix, basin_counts, basin_map)
   end
 end
 
