@@ -34,19 +34,19 @@ def downstream_min_coords(i, j, min_coords, matrix)
   end
 end
 
-matrix = [
-  [1, 5, 2],
-  [2, 4, 7],
-  [3, 6, 9]
-]
-
 # matrix = [
-#   [1, 0, 2, 5, 8],
-#   [2, 3, 4, 7, 9],
-#   [3, 5, 7, 8, 9],
-#   [1, 2, 5, 4, 2],
-#   [3, 3, 5, 2, 1]
+#   [1, 5, 2],
+#   [2, 4, 7],
+#   [3, 6, 9]
 # ]
+
+matrix = [
+  [1, 0, 2, 5, 8],
+  [2, 3, 4, 7, 9],
+  [3, 5, 7, 8, 9],
+  [1, 2, 5, 4, 2],
+  [3, 3, 5, 2, 1]
+]
 
 # [0, 0] => A
 # [1, 2] => B
@@ -62,7 +62,7 @@ def go_downstream(i, j, matrix, curr_basin, basins, seen_basins)
   min_i, min_j = min_neighbor_coords(neighbor_coords, matrix)
 
   if seen_basins[[i, j]]
-    puts 'hit cache'
+    puts "hit cache for (#{i}, #{j})"
     return seen_basins[[i, j]]
   end
 
@@ -73,11 +73,14 @@ def go_downstream(i, j, matrix, curr_basin, basins, seen_basins)
     puts "caching basin: #{basin}"
     seen_basins[[i, j]] = basin
     $curr_basin += 1
+    basin
   else
     puts 'not min, recursing'
     basin = go_downstream(min_i, min_j, matrix, $curr_basin, basins, seen_basins)
-    puts "caching basin: #{basin}"
+    puts "caching basin for (#{i},#{j}): #{basin}"
     seen_basins[[i, j]] = basin
+    basins[basin] += 1
+    basin
   end
 end
 
