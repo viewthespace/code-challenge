@@ -1,24 +1,19 @@
+# Time complexity: O(N)
+# Space complexity: O(N)
+
+# Includes the current point
 def neighbor_coords(curr_point, matrix)
   row, column = curr_point
   top = [row - 1, column] if row != 0
   bottom = [row + 1, column] if row != matrix.size - 1
   left =  [row, column - 1] if column != 0
   right = [row, column + 1] if column != matrix.size - 1
-  [top, bottom, left, right, [row, column]].compact
-end
-
-def element(indexes, matrix)
-  matrix[indexes[0]][indexes[1]]
+  [top, bottom, left, right, curr_point].compact
 end
 
 def min_neighbor_coords(neighbor_coords, matrix)
-  neighbor_coords.map do |idx|
-    { val: element(idx, matrix), coords: idx }
-  end.each_with_index do |h, i|
-    { val: h[:val], coords: h[:coords], idx: i }
-  end.min_by do |h|
-    h[:val]
-  end[:coords]
+  values = neighbor_coords.map { |i, j| matrix[i][j] }
+  neighbor_coords[values.index(values.min)]
 end
 
 def go_downstream(curr_point, matrix, curr_basin, basin_counts, basin_map)
@@ -28,11 +23,10 @@ def go_downstream(curr_point, matrix, curr_basin, basin_counts, basin_map)
   min_point = min_neighbor_coords(neighbor_coords, matrix)
 
   if curr_point == min_point
-    basin_counts[$curr_basin] ||= 1
-    basin = $curr_basin
-    basin_map[curr_point] = basin
+    basin_counts[$curr_basin] = 1
+    basin_map[curr_point] = $curr_basin
     $curr_basin += 1
-    basin
+    basin_map[curr_point]
   else
     basin = go_downstream(min_point, matrix, $curr_basin, basin_counts, basin_map)
     basin_map[curr_point] = basin
@@ -55,8 +49,6 @@ matrix = [
   [3, 3, 5, 2, 1]
 ]
 
-min_coords = []
-local_mins = []
 basin_counts = {}
 $curr_basin = 0
 basin_map = {}
