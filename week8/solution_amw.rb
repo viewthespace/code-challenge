@@ -21,6 +21,26 @@ def min_neighbor_coords(neighbor_coords, matrix)
   end[:coords]
 end
 
+def go_downstream(curr_point, matrix, curr_basin, basin_counts, basin_map)
+  return basin_map[curr_point] if basin_map.has_key?(curr_point)
+
+  neighbor_coords = neighbor_coords(curr_point, matrix)
+  min_point = min_neighbor_coords(neighbor_coords, matrix)
+
+  if curr_point == min_point
+    basin_counts[$curr_basin] ||= 1
+    basin = $curr_basin
+    basin_map[curr_point] = basin
+    $curr_basin += 1
+    basin
+  else
+    basin = go_downstream(min_point, matrix, $curr_basin, basin_counts, basin_map)
+    basin_map[curr_point] = basin
+    basin_counts[basin] += 1
+    basin
+  end
+end
+
 # matrix = [
 #   [1, 5, 2],
 #   [2, 4, 7],
@@ -35,58 +55,26 @@ matrix = [
   [3, 3, 5, 2, 1]
 ]
 
-# [0, 0] => A
-# [1, 2] => B
-#
-# TODO:
-# i, j to curr_point
-def go_downstream(curr_point, matrix, curr_basin, basins, seen_basins)
-  neighbor_coords = neighbor_coords(curr_point, matrix)
-  min_point = min_neighbor_coords(neighbor_coords, matrix)
-
-  if seen_basins[curr_point]
-    return seen_basins[curr_point]
-  end
-
-  if curr_point == min_point
-    basins[$curr_basin] ||= 1
-    basin = $curr_basin
-    seen_basins[curr_point] = basin
-    $curr_basin += 1
-    basin
-  else
-    basin = go_downstream(min_point, matrix, $curr_basin, basins, seen_basins)
-    seen_basins[curr_point] = basin
-    basins[basin] += 1
-    basin
-  end
-end
-
 min_coords = []
 local_mins = []
-basins = {}
+basin_counts = {}
 $curr_basin = 0
-seen_basins = {}
+basin_map = {}
 matrix.each_with_index do |row, i|
   row.each_with_index do |element, j|
-    go_downstream([i, j], matrix, $curr_basin, basins, seen_basins)
+    go_downstream([i, j], matrix, $curr_basin, basin_counts, basin_map)
   end
 end
-
-puts basins.to_s
-puts seen_basins.to_s
 
 letters = ['A', 'B', 'C', 'D', 'E']
 
-# matrix.each_with_index do |row, i|
-#   row.each_with_index do |element, j|
-#     print(letters[basins[[i, j]]])
-#   end
-#   puts
-# end
+matrix.each_with_index do |row, i|
+  row.each_with_index do |element, j|
+    print(letters[basin_map[[i, j]]])
+    print(" ")
+  end
+  puts
+end
 
-# puts
-
-# basins.values.group_by { |i| i }.each do |k, v|
-#   puts "Basin #{letters[k]} count: #{v.count}"
-# end
+puts
+basin_counts.map { |k, v|  puts "#{letters[k]}: #{v}"}
