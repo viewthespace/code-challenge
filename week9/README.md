@@ -14,7 +14,7 @@ The winner will be whoever has the best combination of LOC, time complexity, and
 ### Input
 
 ```
-3 5 6 3 2 2 8 6
+3 5 6 3 2 2 8 6 5 5 5
 ```
 
 ### Output
