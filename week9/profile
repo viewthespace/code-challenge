@@ -1,0 +1,20 @@
+#! /usr/local/bin/node
+
+var execSync = require('child_process').execSync
+var fs = require('fs')
+
+var res = []
+for(var i = 0; i < 100; i++) {
+  execSync(`(time ${process.argv[2]} ${process.argv[3]}) &> tmp.out`)
+  var out = fs.readFileSync('./tmp.out').toString()
+  p = /real.*(0\.\d{3,})s/
+  m = out.match(p)
+  res.push(m[1])
+  fs.unlinkSync('./tmp.out')
+}
+
+var fin = res.reduce((agg, el) => agg + parseFloat(el), 0)
+
+console.log("Average run time:", fin / res.length)
+console.log("File size:", fs.statSync(process.argv[3]).size)
+
