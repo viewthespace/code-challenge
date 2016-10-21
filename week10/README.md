@@ -9,7 +9,9 @@ The goal: **find all words whose keystrokes generate valid English words when ty
 
 - hot (qwerty) = dry (dvorak)
 
-Let's take the example of typing "hot" on a qwerty keyboard. The keystroke sequence is `h -> o -> t`. Typing those same keys on a Dvorak keyboard will produce `d -> r -> y`. They're both English words, so now we can make a pun: "In the middle of the summer, a Qwerty typist asks a Dvorak typist, "Hey is it gonna be dry tomorrow?" The Dvorak typist answers, "Yea, extremely dry." The Qwerty typist walks outside the next day and gets caught in the rain without an umbrella.
+Let's take the example of typing "hot" on a qwerty keyboard. The keystroke sequence is `h -> o -> t`. Typing those same keys on a Dvorak keyboard will produce `d -> r -> y`. They're both English words, so now we can make a pun:
+
+*In the middle of the summer, a Qwerty typist asks a Dvorak typist, "Hey is it gonna be dry tomorrow?" The Dvorak typist answers, "Yea, extremely dry." The Qwerty typist walks outside the next day and gets caught in the rain without an umbrella.*
 
 See, a pun!
 
