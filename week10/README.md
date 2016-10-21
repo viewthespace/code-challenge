@@ -5,7 +5,7 @@ Why do programmers always confuse Halloween and Christmas?
 
 If you figure out that pun, congratulations. But either way, we are going to find opportunities for puns based on typing the same keystrokes on different keyboard layouts.
 
-The goal: **find all words whose keystrokes generate valid English words when typed on both Qwerty and Dvorak keyboard layout.** For example:
+The goal: **find all words whose keystrokes generate valid English words when typed on both Qwerty and Dvorak keyboard layouts.** For example:
 
 - hot (qwerty) = dry (dvorak)
 
