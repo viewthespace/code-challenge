@@ -4,6 +4,8 @@ Write a function that outputs all of the words whose keystrokes generate valid w
 both a qwerty and dvorak keyboard. You may read your english dictionary from the `words` file
 provided here.
 
+Alternatively, you can find the `words` file in /usr/share/dict/words
+
 ### Example:
 
 On a qwerty keyboard, the key strokes for `hot` correspond to `dry` on a dvorak keyboard
