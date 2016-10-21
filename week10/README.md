@@ -15,7 +15,11 @@ Let's take the example of typing "hot" on a qwerty keyboard. The keystroke seque
 
 See, a pun!
 
-For the sake of this challenge, a "valid English word" is a word that appears in `/usr/share/dict/words`.
+For the sake of this challenge, a "valid English word" is a word that appears in `/usr/share/dict/words`. The output of the program should be a file where each match is on its own line and has the form:
+
+`q:<word>|d:<word>`, or `d:<word>|q:<word>`
+
+where `q` and `d` signify which keyboard layout the word was typed on (Qwerty or Dvorak).
 
 Here are the character mappings between the two layouts (Note that each direction is given, i.e. qwerty -> dvorak and dvorak -> qwerty. Again, direction matters!)
 
