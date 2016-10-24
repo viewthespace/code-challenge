@@ -7,6 +7,7 @@ use std::io::BufReader;
 use std::collections::HashSet;
 use std::collections::HashMap;
 use std::sync::mpsc::channel;
+use std::sync::Arc;
 
 macro_rules! hash {
     ( $( $k:expr => $v:expr ),* ) => {
@@ -59,8 +60,13 @@ fn main() {
     let file = File::open("/usr/share/dict/words").unwrap();
     let size = file.metadata().unwrap().len() as usize;
     let mut words: Vec<String> = BufReader::new(file).lines().map(|line| line.unwrap()).collect();
-
+    let chunk_size = words.len() / 4;
     let index: HashSet<String> = words.iter().cloned().collect();
+
+    let shared_words = Arc::new(words);
+
+
+
     let char_map = qd_map();
 
     let mut handles = Vec::with_capacity(4);
@@ -80,14 +86,14 @@ fn main() {
 
     let (tx, rx) = channel();
 
-    for (i, chunk) in words.chunks(60000).enumerate() {
-        let chunk_words = chunk.to_owned();
+    for i in 0..4 {
+        let cloned_words = shared_words.clone();
         let char_map = qd_map().to_owned();
         let word_index = index.to_owned();
         println!("Pushing thread");
         let tx = tx.clone();
         handles.push(thread::spawn(move || {
-            for word in chunk_words {
+            for word in cloned_words.iter().skip(i * chunk_size).take(chunk_size) {
                 if word.chars().any(|c|
                                     c == 'q' || c == 'Q' || c == 'w' || c == 'W' ||
                                     c == 'e' || c == 'E' || c == 'z' || c == 'Z'
