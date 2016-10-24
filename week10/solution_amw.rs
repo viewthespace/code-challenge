@@ -6,7 +6,7 @@ use std::thread;
 use std::io::BufReader;
 use std::collections::HashSet;
 use std::collections::HashMap;
-
+use std::sync::mpsc::channel;
 
 macro_rules! hash {
     ( $( $k:expr => $v:expr ),* ) => {
@@ -62,36 +62,52 @@ fn main() {
 
     let index: HashSet<String> = words.iter().cloned().collect();
     let char_map = qd_map();
-//    let mut word_bytes: Vec<u8> = Vec::with_capacity(size);
-    //reader.read_to_end(&mut word_bytes);
-    //let words = word_bytes.split(|&byte| byte == b'\n').cloned().
 
-    //let mut handles = Vec::with_capacity(4);
+    let mut handles = Vec::with_capacity(4);
 
-    for word in words {
-        if word.chars().any(|c|
-                            c == 'q' || c == 'Q' || c == 'w' || c == 'W' ||
-                            c == 'e' || c == 'E' || c == 'z' || c == 'Z'
-        ) {
-            continue
-        }
-        let converted = word.chars().map(|c| char_map[&c]).collect::<String>();
-        if let Some(_) =  index.get(&converted) {
-            println!("q:{}|d:{}", word, converted);
-        }
+    // for word in words {
+    //     if word.chars().any(|c|
+    //                         c == 'q' || c == 'Q' || c == 'w' || c == 'W' ||
+    //                         c == 'e' || c == 'E' || c == 'z' || c == 'Z'
+    //     ) {
+    //         continue
+    //     }
+    //     let converted = word.chars().map(|c| char_map[&c]).collect::<String>();
+    //     if let Some(_) =  index.get(&converted) {
+    //         println!("q:{}|d:{}", word, converted);
+    //     }
+    // }
+
+    let (tx, rx) = channel();
+
+    for (i, chunk) in words.chunks(60000).enumerate() {
+        let chunk_words = chunk.to_owned();
+        let char_map = qd_map().to_owned();
+        let word_index = index.to_owned();
+        println!("Pushing thread");
+        let tx = tx.clone();
+        handles.push(thread::spawn(move || {
+            for word in chunk_words {
+                if word.chars().any(|c|
+                                    c == 'q' || c == 'Q' || c == 'w' || c == 'W' ||
+                                    c == 'e' || c == 'E' || c == 'z' || c == 'Z'
+                ) {
+                    continue
+                }
+                let converted = word.chars().map(|c| char_map[&c]).collect::<String>();
+                if let Some(_) =  word_index.get(&converted) {
+                    println!("q:{}|d:{}", word, converted);
+                }
+            }
+            if i == 3 {
+                tx.send(()).unwrap();
+            }
+        }));
     }
 
-    // for chunk in words.chunks(60000) {
-    //     let chunk_words = chunk.to_owned();
-    //     println!("Pushing thread");
-    //     handles.push(thread::spawn(move || {
-    //         for word in chunk_words {
-    //             println!("{}", word);
-    //         }
-    //     }));
-    // }
+    rx.recv().unwrap();
 
-    // for handle in handles {
-    //     handle.join().unwrap();
-    // }
+//    for handle in handles {
+//        handle.join().unwrap();
+//    }
 }
