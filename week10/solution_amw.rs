@@ -1,6 +1,5 @@
 use std::fs::File;
 use std::io::prelude::*;
-use std::path::Path;
 use std::str;
 use std::thread;
 use std::io::BufReader;
@@ -49,50 +48,28 @@ macro_rules! idx {
 //     idx!(b'x') // b, etc.
 // ];
 
-fn get_words(mut into_string: &mut String) -> &String {
-    let path = Path::new("/usr/share/dict/words");
-    let mut file = File::open(&path).unwrap();
-    file.read_to_string(into_string);
-    into_string
-}
-
 fn main() {
     let file = File::open("/usr/share/dict/words").unwrap();
-    let size = file.metadata().unwrap().len() as usize;
-    let mut words: Vec<String> = BufReader::new(file).lines().map(|line| line.unwrap()).collect();
-    let chunk_size = words.len() / 4;
+    let words: Vec<String> = BufReader::new(file).lines().map(|line| line.unwrap()).collect();
+
+    let iter_size = 8;
+    let chunk_size = words.len() / iter_size;
+
     let index: HashSet<String> = words.iter().cloned().collect();
 
+    let shared_index = Arc::new(index);
     let shared_words = Arc::new(words);
-
-
-
-    let char_map = qd_map();
-
-    let mut handles = Vec::with_capacity(4);
-
-    // for word in words {
-    //     if word.chars().any(|c|
-    //                         c == 'q' || c == 'Q' || c == 'w' || c == 'W' ||
-    //                         c == 'e' || c == 'E' || c == 'z' || c == 'Z'
-    //     ) {
-    //         continue
-    //     }
-    //     let converted = word.chars().map(|c| char_map[&c]).collect::<String>();
-    //     if let Some(_) =  index.get(&converted) {
-    //         println!("q:{}|d:{}", word, converted);
-    //     }
-    // }
 
     let (tx, rx) = channel();
 
-    for i in 0..4 {
+    for i in 0..iter_size {
         let cloned_words = shared_words.clone();
+
+        // Try and Arc this
         let char_map = qd_map().to_owned();
-        let word_index = index.to_owned();
-        println!("Pushing thread");
+        let word_index = shared_index.clone();
         let tx = tx.clone();
-        handles.push(thread::spawn(move || {
+        thread::spawn(move || {
             for word in cloned_words.iter().skip(i * chunk_size).take(chunk_size) {
                 if word.chars().any(|c|
                                     c == 'q' || c == 'Q' || c == 'w' || c == 'W' ||
@@ -105,15 +82,11 @@ fn main() {
                     println!("q:{}|d:{}", word, converted);
                 }
             }
-            if i == 3 {
+            if i == iter_size - 1 {
                 tx.send(()).unwrap();
             }
-        }));
+        });
     }
 
     rx.recv().unwrap();
-
-//    for handle in handles {
-//        handle.join().unwrap();
-//    }
 }
