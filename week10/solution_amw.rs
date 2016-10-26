@@ -20,6 +20,9 @@ macro_rules! hash {
     };
 }
 
+enum WorkMsg {
+    ChunkResults(Vec<String>)
+}
 
 fn qd_map() -> HashMap<char, char> {
     hash!(
@@ -60,7 +63,7 @@ fn main() {
     let shared_index = Arc::new(index);
     let shared_words = Arc::new(words);
 
-    let (tx, rx) = channel();
+    let (tx_wq, rx_wq) = channel();
 
     for i in 0..iter_size {
         let cloned_words = shared_words.clone();
@@ -68,8 +71,9 @@ fn main() {
         // Try and Arc this
         let char_map = qd_map().to_owned();
         let word_index = shared_index.clone();
-        let tx = tx.clone();
+        let tx_wq = tx_wq.clone();
         thread::spawn(move || {
+            let mut results = vec!();
             for word in cloned_words.iter().skip(i * chunk_size).take(chunk_size) {
                 if word.chars().any(|c|
                                     c == 'q' || c == 'Q' || c == 'w' || c == 'W' ||
@@ -79,14 +83,35 @@ fn main() {
                 }
                 let converted = word.chars().map(|c| char_map[&c]).collect::<String>();
                 if let Some(_) =  word_index.get(&converted) {
-                    println!("q:{}|d:{}", word, converted);
+                    results.push(format!("q:{}|d:{}", word, converted));
                 }
             }
-            if i == iter_size - 1 {
-                tx.send(()).unwrap();
-            }
+            tx_wq.send(WorkMsg::ChunkResults(results)).unwrap();
         });
     }
+    let file_thread = thread::spawn(move || {
+        let mut results = vec!();
+        let mut num_chunks_processed = 0;
+        while num_chunks_processed < iter_size {
+            match rx_wq.recv() {
+                Ok(msg) => {
+                    match msg {
+                        WorkMsg::ChunkResults(producer_results) => {
+                            println!("hello: {}", num_chunks_processed);
+                            num_chunks_processed += 1;
+                            let mut mut_results = producer_results;
+                            results.append(&mut mut_results);
+                        }
+                    }
+                },
+                _ => {}
+            }
+        }
+        let mut out_file = File::create("words.txt").unwrap();
+        let str = results.join("\n");
+        let bytes = str.as_bytes();
+        out_file.write_all(bytes).unwrap();
+    });
 
-    rx.recv().unwrap();
+    file_thread.join().unwrap();
 }
