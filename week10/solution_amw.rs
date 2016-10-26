@@ -7,6 +7,7 @@ use std::collections::HashSet;
 use std::collections::HashMap;
 use std::sync::mpsc::channel;
 use std::sync::Arc;
+use std::ascii::AsciiExt;
 
 macro_rules! hash {
     ( $( $k:expr => $v:expr ),* ) => {
@@ -55,7 +56,7 @@ fn main() {
     let file = File::open("/usr/share/dict/words").unwrap();
     let words: Vec<String> = BufReader::new(file).lines().map(|line| line.unwrap()).collect();
 
-    let iter_size = 8;
+    let iter_size = 9;
     let chunk_size = words.len() / iter_size;
 
     let index: HashSet<String> = words.iter().cloned().collect();
@@ -74,6 +75,12 @@ fn main() {
         let tx_wq = tx_wq.clone();
         thread::spawn(move || {
             let mut results = vec!();
+            // let char_arr: [u8; 2] = [
+            //     b'a',
+            //     b'b'
+            // ];
+//            let idx = ('a' as u8) - 97;
+            //println!("{}", char_arr[idx as usize]);
             for word in cloned_words.iter().skip(i * chunk_size).take(chunk_size) {
                 if word.chars().any(|c|
                                     c == 'q' || c == 'Q' || c == 'w' || c == 'W' ||
@@ -81,7 +88,7 @@ fn main() {
                 ) {
                     continue
                 }
-                let converted = word.chars().map(|c| char_map[&c]).collect::<String>();
+                let converted = word.chars().map(|c| char_map[&c.to_ascii_lowercase()]).collect::<String>();
                 if let Some(_) =  word_index.get(&converted) {
                     results.push(format!("q:{}|d:{}", word, converted));
                 }
@@ -89,29 +96,26 @@ fn main() {
             tx_wq.send(WorkMsg::ChunkResults(results)).unwrap();
         });
     }
-    let file_thread = thread::spawn(move || {
-        let mut results = vec!();
-        let mut num_chunks_processed = 0;
-        while num_chunks_processed < iter_size {
-            match rx_wq.recv() {
-                Ok(msg) => {
-                    match msg {
-                        WorkMsg::ChunkResults(producer_results) => {
-                            println!("hello: {}", num_chunks_processed);
-                            num_chunks_processed += 1;
-                            let mut mut_results = producer_results;
-                            results.append(&mut mut_results);
-                        }
-                    }
-                },
-                _ => {}
-            }
-        }
-        let mut out_file = File::create("words.txt").unwrap();
-        let str = results.join("\n");
-        let bytes = str.as_bytes();
-        out_file.write_all(bytes).unwrap();
-    });
 
-    file_thread.join().unwrap();
+    let mut results = vec!();
+    let mut num_chunks_processed = 0;
+    while num_chunks_processed < iter_size {
+        match rx_wq.recv() {
+            Ok(msg) => {
+                match msg {
+                    WorkMsg::ChunkResults(producer_results) => {
+//                        println!("Processed chunk.");
+                        num_chunks_processed += 1;
+                        let mut mut_results = producer_results;
+                        results.append(&mut mut_results);
+                    }
+                }
+            },
+            _ => {}
+        }
+    }
+    let mut out_file = File::create("words.txt").unwrap();
+    let str = results.join("\n");
+    let bytes = str.as_bytes();
+    out_file.write_all(bytes).unwrap();
 }
