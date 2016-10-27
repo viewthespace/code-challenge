@@ -35,17 +35,15 @@ static QD_MAP: [char; 26] = [
 ];
 fn main() {
     let file = File::open("/usr/share/dict/words").unwrap();
-    let words: Vec<String> = BufReader::new(file).lines().map(|line| line.unwrap()).collect();
+    let words: Vec<String> = BufReader::new(file).lines().map(|line| line.unwrap()).filter(|word|
+                                                                                           !word.chars().any(|c|
+                                                                                                             c == 'q' || c == 'Q' || c == 'w' || c == 'W' ||
+                                                                                                             c == 'e' || c == 'E' || c == 'z' || c == 'Z')
+    ).collect();
 
     let word_index: HashSet<String> = words.iter().cloned().collect();
     let mut results = vec!();
     for word in words {
-        if word.chars().any(|c|
-                            c == 'q' || c == 'Q' || c == 'w' || c == 'W' ||
-                            c == 'e' || c == 'E' || c == 'z' || c == 'Z'
-        ) {
-            continue
-        }
         let converted = word.chars().map(|c|
                                          QD_MAP[((c.to_ascii_lowercase() as u8) - 97) as usize]
         ).collect::<String>();
