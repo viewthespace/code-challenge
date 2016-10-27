@@ -14,8 +14,9 @@ void traverse(int **nodeQwerrty, int **nodeDvorak, char *wordQwerrty, char *word
  * puns()
  * Runtime:
  * Memory:
- * Time: 0.13 real         0.07 user         0.04 sys
+ * Time: 0.9 real         0.07 user         0.04 sys
  */
+
 void puns() {
   const int **root = malloc(sizeof(int*) * 27);
   memset(root, 0, sizeof(int*) * 27);
@@ -25,22 +26,40 @@ void puns() {
   file = fopen("/usr/share/dict/words", "r");
   if(file) {
     int **currentLetter = root;
+    int skipa = 0;
+    int skipb = 0;
+    int skip = 0;
     while ((nread = fread(buffer, 1, sizeof buffer, file)) > 0) {
       for(int i = 0; i < nread; i++) {
         int c = (int)buffer[i];
         if(c == 10) {
-          currentLetter[26] = 1;
+          if(!skip) {
+            currentLetter[26] = 1;
+          }
           currentLetter = root;
+          skip = 0;
+          skipa = 0;
+          skipb = 0;
         } else {
           if(c >= 65 && c <= 90) {
             c += 32;
           }
           c -= 97;
-          if(!(currentLetter[c])) {
-            currentLetter[c] = malloc(sizeof(int*) * 27);
-            memset(currentLetter[c], 0, sizeof(int*) * 27);
+          if(c == 4 || c == 16 || c == 22 || c == 25) {
+            skipa = 1;
           }
-          currentLetter = (int**)currentLetter[c];
+          if(c == 18 || c == 21 || c == 22 || c == 21) {
+            skipb = 1;
+          }
+          if(skipa && skipb) {
+            skip = 1;
+          }
+          if(!skip){
+            if((!(currentLetter[c]))) {
+              currentLetter[c] = calloc(27, sizeof(int*));
+            }
+            currentLetter = (int**)currentLetter[c];
+          }
         }
       }
     }
@@ -69,7 +88,7 @@ void traverse(int **nodeQwerrty, int **nodeDvorak, char wordQwerrty[], char word
 }
 
 int main(int argc, char **argv) {
-//  float startTime = (float)clock()/CLOCKS_PER_SEC;
+  //float startTime = (float)clock()/CLOCKS_PER_SEC;
   puns();
 //  float endTime = (float)clock()/CLOCKS_PER_SEC;
 //  float timeElapsed = endTime - startTime;
