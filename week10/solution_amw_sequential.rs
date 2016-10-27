@@ -6,55 +6,35 @@ use std::collections::HashSet;
 use std::ascii::AsciiExt;
 
 static QD_MAP: [char; 26] = [
-    'a',
-    'x',
-    'j',
-    'e',
-    'x', // e, bad
-    'u',
-    'i',
-    'd',
-    'c',
-    'h',
-    't',
-    'n',
-    'm',
-    'b',
-    'r',
-    'l',
-    'x', //q, bad
-    'p',
-    'o',
-    'y',
-    'g',
-    'k',
-    'x', //w, bad
-    'q',
-    'f',
-    'x', //z bad
+    'a', 'x', 'j', 'e',
+    'x', 'u', 'i', 'd',
+    'c', 'h', 't', 'n',
+    'm', 'b', 'r', 'l',
+    'x', 'p', 'o', 'y',
+    'g', 'k', 'x', 'q',
+    'f', 'x',
 ];
 fn main() {
     let file = File::open("/usr/share/dict/words").unwrap();
-    let words: Vec<String> = BufReader::new(file).lines().map(|line| line.unwrap()).filter(|word|
-                                                                                           !word.chars().any(|c|
-                                                                                                             c == 'q' || c == 'Q' || c == 'w' || c == 'W' ||
-                                                                                                             c == 'e' || c == 'E' || c == 'z' || c == 'Z')
-    ).collect();
 
+    let lines = BufReader::new(file).lines().map(|line| line.unwrap());
+    let words: Vec<String> = lines.filter(|word|
+                                          !word.chars().any(|c|
+                                                            c == 'q' || c == 'Q' || c == 'w' || c == 'W' ||
+                                                            c == 'e' || c == 'E' || c == 'z' || c == 'Z')
+    ).collect();
     let word_index: HashSet<String> = words.iter().cloned().collect();
-    let mut results = vec!();
+    let mut results = String::new();
     for word in words {
         let converted = word.chars().map(|c|
                                          QD_MAP[((c.to_ascii_lowercase() as u8) - 97) as usize]
         ).collect::<String>();
         if let Some(_) =  word_index.get(&converted) {
-            results.push(format!("q:{}|d:{}", word, converted));
+            results.push_str(format!("q:{}|d:{}\n", word, converted).as_str());
         }
     }
 
-
     let mut out_file = File::create("words.txt").unwrap();
-    let str = results.join("\n");
-    let bytes = str.as_bytes();
+    let bytes = results.as_bytes();
     out_file.write_all(bytes).unwrap();
 }
