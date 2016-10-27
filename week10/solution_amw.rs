@@ -28,6 +28,8 @@ static QD_MAP: [char; 26] = [
     'f', 'x'
 ];
 
+static ASCII_LOWCASE_A_OFFSET: u8 = 97;
+
 fn main() {
     let file = File::open("/usr/share/dict/words").unwrap();
     let lines = BufReader::new(file).lines().map(|line| line.unwrap());
@@ -54,7 +56,7 @@ fn main() {
             let mut results = String::new();
             for word in cloned_words.iter().skip(i * chunk_size).take(chunk_size) {
                 let converted = word.chars().map(|c|
-                                                 QD_MAP[((c.to_ascii_lowercase() as u8) - 97) as usize]
+                                                 QD_MAP[((c.to_ascii_lowercase() as u8) - ASCII_LOWCASE_A_OFFSET) as usize]
                 ).collect::<String>();
                 if word_index.contains(&converted) {
                     results.push_str(format!("q:{}|d:{}\n", word, converted).as_str());
