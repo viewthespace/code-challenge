@@ -24,9 +24,12 @@ static QD_MAP: [char; 26] = [
 
 fn main() {
     let file = File::open("/usr/share/dict/words").unwrap();
-    let words: Vec<String> = BufReader::new(file).lines().map(|line| line.unwrap()).collect();
-
-    let iter_size = 9;
+    let words: Vec<String> = BufReader::new(file).lines().map(|line| line.unwrap()).filter(|word|
+                                                                                           !word.chars().any(|c|
+                                                                                            c == 'q' || c == 'Q' || c == 'w' || c == 'W' ||
+                                                                                            c == 'e' || c == 'E' || c == 'z' || c == 'Z')
+    ).collect();
+    let iter_size = 5;
     let chunk_size = words.len() / iter_size;
 
     let index: HashSet<String> = words.iter().cloned().collect();
@@ -45,13 +48,6 @@ fn main() {
         thread::spawn(move || {
             let mut results = vec!();
             for word in cloned_words.iter().skip(i * chunk_size).take(chunk_size) {
-                if word.chars().any(|c|
-                                    c == 'q' || c == 'Q' || c == 'w' || c == 'W' ||
-                                    c == 'e' || c == 'E' || c == 'z' || c == 'Z'
-                ) {
-                    continue
-                }
-
                 let converted = word.chars().map(|c|
                                                  QD_MAP[((c.to_ascii_lowercase() as u8) - 97) as usize]
                 ).collect::<String>();
@@ -63,25 +59,18 @@ fn main() {
         });
     }
 
-    let mut results = vec!();
+    let mut results = String::new();
     let mut num_chunks_processed = 0;
     while num_chunks_processed < iter_size {
-        match rx_wq.recv() {
-            Ok(msg) => {
-                match msg {
-                    WorkMsg::ChunkResults(producer_results) => {
-//                        println!("Processed chunk.");
-                        num_chunks_processed += 1;
-                        let mut mut_results = producer_results;
-                        results.append(&mut mut_results);
-                    }
-                }
-            },
-            _ => {}
+        match rx_wq.recv().unwrap() {
+            WorkMsg::ChunkResults(producer_results) => {
+                num_chunks_processed += 1;
+                results.push_str(producer_results.join("\n").as_str())
+            }
         }
     }
+    results.push_str("\n");
     let mut out_file = File::create("words.txt").unwrap();
-    let str = results.join("\n");
-    let bytes = str.as_bytes();
+    let bytes = results.as_bytes();
     out_file.write_all(bytes).unwrap();
 }
