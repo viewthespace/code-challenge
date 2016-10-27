@@ -34,12 +34,12 @@ fn main() {
     let shared_index = Arc::new(index);
     let shared_words = Arc::new(words);
 
-    let (tx_wq, rx_wq) = channel();
+    let (tx, rx) = channel();
 
     for i in 0..iter_size {
         let cloned_words = shared_words.clone();
         let word_index = shared_index.clone();
-        let tx_wq = tx_wq.clone();
+        let tx = tx.clone();
         thread::spawn(move || {
             let mut results = String::new();
             for word in cloned_words.iter().skip(i * chunk_size).take(chunk_size) {
@@ -50,14 +50,14 @@ fn main() {
                     results.push_str(format!("q:{}|d:{}\n", word, converted).as_str());
                 }
             }
-            tx_wq.send(results).unwrap();
+            tx.send(results).unwrap();
         });
     }
 
     let mut results = String::new();
     let mut num_chunks_processed = 0;
     while num_chunks_processed < iter_size {
-        let producer_results = rx_wq.recv().unwrap();
+        let producer_results = rx.recv().unwrap();
         num_chunks_processed += 1;
         results.push_str(producer_results.as_str())
     }
