@@ -9,7 +9,7 @@ use std::sync::Arc;
 use std::ascii::AsciiExt;
 
 /*
- * Averages about 54µs on my machine
+ * Averages about 54ms on my machine
  *
  * Spawns 7 threads that each process their own
  * chunk of the list of strings. Concurrently
