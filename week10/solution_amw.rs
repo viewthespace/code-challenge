@@ -4,53 +4,23 @@ use std::str;
 use std::thread;
 use std::io::BufReader;
 use std::collections::HashSet;
-use std::collections::HashMap;
 use std::sync::mpsc::channel;
 use std::sync::Arc;
 use std::ascii::AsciiExt;
-
-macro_rules! hash {
-    ( $( $k:expr => $v:expr ),* ) => {
-{
-    let mut tmp_hash = HashMap::new();
-    $(
-        tmp_hash.insert($k, $v);
-    )*
-        tmp_hash
-}
-    };
-}
 
 enum WorkMsg {
     ChunkResults(Vec<String>)
 }
 
-fn qd_map() -> HashMap<char, char> {
-    hash!(
-        'a' => 'a', 'A' => 'A', 'b' => 'x', 'B' => 'X',
-        'c' => 'j', 'C' => 'J', 'd' => 'e', 'D' => 'E',
-        'f' => 'u', 'F' => 'U', 'g' => 'i', 'G' => 'I',
-        'h' => 'd', 'H' => 'D', 'i' => 'c', 'I' => 'C',
-        'j' => 'h', 'J' => 'H', 'k' => 't', 'K' => 'T',
-        'l' => 'n', 'L' => 'N', 'm' => 'm', 'M' => 'M',
-        'n' => 'b', 'N' => 'B', 'o' => 'r', 'O' => 'R',
-        'p' => 'l', 'P' => 'L', 'r' => 'p', 'R' => 'P',
-        's' => 'o', 'S' => 'O', 't' => 'y', 'T' => 'Y',
-        'u' => 'g', 'U' => 'G', 'v' => 'k', 'V' => 'K',
-        'x' => 'q', 'X' => 'Q', 'y' => 'f', 'Y' => 'F'
-     )
-}
-
-macro_rules! idx {
-    ($t:expr) => {
-        $t - 97
-    }
-}
-
-// static qd_map: [u8; 2] = [
-//     idx!(b'a'), // a
-//     idx!(b'x') // b, etc.
-// ];
+static QD_MAP: [char; 26] = [
+    'a', 'x', 'j', 'e',
+    'x', 'u', 'i', 'd',
+    'c', 'h', 't', 'n',
+    'm', 'b', 'r', 'l',
+    'x', 'p', 'o', 'y',
+    'g', 'k', 'x', 'q',
+    'f', 'x'
+];
 
 fn main() {
     let file = File::open("/usr/share/dict/words").unwrap();
@@ -70,17 +40,10 @@ fn main() {
         let cloned_words = shared_words.clone();
 
         // Try and Arc this
-        let char_map = qd_map().to_owned();
         let word_index = shared_index.clone();
         let tx_wq = tx_wq.clone();
         thread::spawn(move || {
             let mut results = vec!();
-            // let char_arr: [u8; 2] = [
-            //     b'a',
-            //     b'b'
-            // ];
-//            let idx = ('a' as u8) - 97;
-            //println!("{}", char_arr[idx as usize]);
             for word in cloned_words.iter().skip(i * chunk_size).take(chunk_size) {
                 if word.chars().any(|c|
                                     c == 'q' || c == 'Q' || c == 'w' || c == 'W' ||
@@ -88,7 +51,10 @@ fn main() {
                 ) {
                     continue
                 }
-                let converted = word.chars().map(|c| char_map[&c.to_ascii_lowercase()]).collect::<String>();
+
+                let converted = word.chars().map(|c|
+                                                 QD_MAP[((c.to_ascii_lowercase() as u8) - 97) as usize]
+                ).collect::<String>();
                 if let Some(_) =  word_index.get(&converted) {
                     results.push(format!("q:{}|d:{}", word, converted));
                 }
