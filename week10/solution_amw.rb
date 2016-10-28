@@ -1,5 +1,9 @@
 #!/usr/bin/env ruby
 
+#
+# Averages 940ms
+#
+
 require 'set'
 
 q_to_d = {
