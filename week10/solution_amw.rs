@@ -40,8 +40,7 @@ fn main() {
         .collect();
     let iter_size = 7;
     let chunk_size = words.len() / iter_size;
-
-    println!("Chunk size = {}", chunk_size);
+    let leftover_words = words.len() - iter_size * chunk_size;
 
     let index: HashSet<String> = words.iter().map(|word| word.to_ascii_lowercase()).collect();
 
@@ -56,7 +55,11 @@ fn main() {
         let word_index = shared_index.clone();
         let tx = tx.clone();
         thread::spawn(move || {
-            for word in cloned_words.iter().skip(i * chunk_size).take(chunk_size) {
+            let mut thread_chunk_size = chunk_size;
+            if i == iter_size - 1 {
+                thread_chunk_size = chunk_size + leftover_words;
+            }
+            for word in cloned_words.iter().skip(i * chunk_size).take(thread_chunk_size) {
                 let converted = word.chars().map(|c| QD_MAP[idx!(c)]).collect::<String>();
                 if word_index.contains(&converted) {
                     results.push_str(format!("q:{}|d:{}\n", word, converted).as_str());
