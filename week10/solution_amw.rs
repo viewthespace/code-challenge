@@ -8,7 +8,7 @@ use std::sync::mpsc::channel;
 use std::sync::Arc;
 use std::ascii::AsciiExt;
 
-// Averages about 54ms on my machine
+// Averages about 57ms on my machine
 //
 // Spawns 7 threads that each process their own
 // chunk of the list of strings. Concurrently
@@ -51,6 +51,7 @@ fn main() {
     let (tx, rx) = channel();
 
     for i in 0..iter_size {
+        let mut results = String::new();
         let cloned_words = shared_words.clone();
         let word_index = shared_index.clone();
         let tx = tx.clone();
@@ -58,16 +59,21 @@ fn main() {
             for word in cloned_words.iter().skip(i * chunk_size).take(chunk_size) {
                 let converted = word.chars().map(|c| QD_MAP[idx!(c)]).collect::<String>();
                 if word_index.contains(&converted) {
-                    println!("q:{}|d:{}", word, converted);
+                    results.push_str(format!("q:{}|d:{}\n", word, converted).as_str());
                 }
             }
-            tx.send(()).unwrap();
+            tx.send(results).unwrap();
         });
     }
 
+    let mut results = String::new();
     let mut num_chunks_processed = 0;
     while num_chunks_processed < iter_size {
-        rx.recv().unwrap();
+        let producer_results = rx.recv().unwrap();
         num_chunks_processed += 1;
+        results.push_str(producer_results.as_str())
     }
+    let mut out_file = File::create("words.txt").unwrap();
+    let bytes = results.as_bytes();
+    out_file.write_all(bytes).unwrap();
 }
