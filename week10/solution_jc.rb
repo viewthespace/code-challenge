@@ -30,6 +30,7 @@ def 💩
 
   # These characters map to punctuation marks
   ignored_chars = ["q", "w", "e", "z"]
+  word_mapping = {}
 
   words = File.read('/usr/share/dict/words').downcase
   output_file = File.new('output.txt', 'w+')
@@ -44,8 +45,14 @@ def 💩
 
     dvorak = ''
     characters.each{|c| dvorak += qwerty_to_dvorak[c.to_sym]}
+    word_mapping[stripped] = dvorak
+  end
 
-    output_string += "q:#{stripped}|d:#{dvorak}\n" if words.match(Regexp.new(Regexp.escape(dvorak)))
+  word_mapping.each do |word, dvorak|
+    characters = word.chars
+    next if characters.any?{|c| ignored_chars.include?(c)}
+
+    output_string += "q:#{word}|d:#{dvorak}\n" if !word_mapping[word_mapping[word]].nil?
   end
 
   output_file.puts(output_string)
