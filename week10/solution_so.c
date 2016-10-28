@@ -10,15 +10,15 @@ const int Q_TO_D[26] = { 0, 23, 9, 4, -1, 20, 8, 3, 2, 7, 19, 13, 12, 1, 17, 11,
 void puns();
 void traverse(int **nodeQwerrty, int **nodeDvorak, char *wordQwerrty, char *wordDvorak, int wordLength);
 
-/*
- * puns()
- * Runtime:
- * Memory:
- * Time: 0.9 real         0.07 user         0.04 sys
- */
-
+int **pages;
+void* shalloc() {
+  const int *p = pages;
+  pages = pages + 27;
+  return p;
+}
 void puns() {
-  const int **root = malloc(sizeof(int*) * 27);
+  pages = malloc(sizeof(int*) * 27 * 520000);
+  const int **root = shalloc();
   memset(root, 0, sizeof(int*) * 27);
   char buffer[BUFFER_SIZE];
   FILE *file;
@@ -56,16 +56,16 @@ void puns() {
           }
           if(!skip){
             if((!(currentLetter[c]))) {
-              currentLetter[c] = calloc(27, sizeof(int*));
+              currentLetter[c] = shalloc();
             }
-            currentLetter = (int**)currentLetter[c];
+            currentLetter = currentLetter[c];
           }
         }
       }
     }
     fclose(file);
-    char wordQwerrty[50] = {0};
-    char wordDvorak[50] = {0};
+    const char wordQwerrty[50] = {0};
+    const char wordDvorak[50] = {0};
     traverse(root, root, wordQwerrty, wordDvorak, 0);
   }
 }
@@ -88,10 +88,10 @@ void traverse(int **nodeQwerrty, int **nodeDvorak, char wordQwerrty[], char word
 }
 
 int main(int argc, char **argv) {
-  //float startTime = (float)clock()/CLOCKS_PER_SEC;
+  const float startTime = (float)clock()/CLOCKS_PER_SEC;
   puns();
-//  float endTime = (float)clock()/CLOCKS_PER_SEC;
-//  float timeElapsed = endTime - startTime;
-//  printf("%.5f", timeElapsed);
+  const float endTime = (float)clock()/CLOCKS_PER_SEC;
+  const float timeElapsed = endTime - startTime;
+  printf("%.5f\n", timeElapsed);
   return 0;
 }
