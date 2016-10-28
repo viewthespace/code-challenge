@@ -1,10 +1,10 @@
 # $ week9/profile ruby week10/solution_yz.rb
-# Average run time: 0.58036
-# File size: 1264
+# Average run time: 0.51182
+# File size: 1294
 class Week10SolutionYz
-  MAP_TO_PUNCTUATION = /[eqwz]/.freeze
-  FROM_QWERTY = 'bcdfghijklnoprstuvxy'.freeze
-  TO_DVORAK   = 'xjeuidchtnbrlpoygkqf'.freeze
+  MAP_TO_PUNCTUATION = 'e'
+  FROM_QWERTY = 'bcdfghijklnoprstuvxyqwz'.freeze
+  TO_DVORAK   = 'xjeuidchtnbrlpoygkqf~~~'.freeze
 
   def initialize(input_file, output_file)
     @input_file = input_file
@@ -23,7 +23,7 @@ class Week10SolutionYz
     input = File.open(@input_file)
     input.each do |word|
       qwerty = word.downcase.chomp
-      next if qwerty =~ MAP_TO_PUNCTUATION
+      next if qwerty.include?(?e)
       dvorak = qwerty.tr(FROM_QWERTY, TO_DVORAK)
       @dvorak_to_qwerty[dvorak] = qwerty
     end
