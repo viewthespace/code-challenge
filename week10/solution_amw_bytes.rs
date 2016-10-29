@@ -2,7 +2,15 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::ascii::AsciiExt;
 use std::collections::HashSet;
+use std::time::Instant;
 use std::str;
+
+// Averages 51ms
+// Operate on references to one vector of bytes,
+// rather than create a bunch of heap-allocated Strings.
+// Also, don't put words that can't be valid Dvorak words
+// into the search index since it's expensive to create,
+// i.e. remove words with 's', 'v', 'w', or 'z'
 
 static QD_MAP: [u8; 26] = [b'a', b'x', b'j', b'e', b'x', b'u', b'i', b'd', b'c', b'h', b't', b'n', b'm', b'b',
                              b'r', b'l', b'x', b'p', b'o', b'y', b'g', b'k', b'x', b'q', b'f', b'x'];
