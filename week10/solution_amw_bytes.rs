@@ -27,11 +27,13 @@ fn main() {
         !word.iter().any(|b| *b == b'q' || *b == b'w' || *b == b'e' || *b == b'z')
     );
 
-    let index: HashSet<&[u8]> = words.iter().cloned().collect();
+    let target_words: HashSet<&[u8]> = words.iter().filter(|word|
+        !word.iter().any(|b| *b == b's' || *b == b'v' || *b == b'w' || *b == b'z')
+    ).cloned().collect();
 
     for word in convertible_words {
         let converted = word.iter().map(|c| QD_MAP[idx!(*c)]).collect::<Vec<u8>>();
-        if index.contains(&*converted) {
+        if target_words.contains(&*converted) {
             println!("q:{}|d:{}", str::from_utf8(word).unwrap(), str::from_utf8(&converted).unwrap());
         }
     }
