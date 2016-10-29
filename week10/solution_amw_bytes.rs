@@ -2,7 +2,6 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::ascii::AsciiExt;
 use std::collections::HashSet;
-use std::time::Instant;
 use std::str;
 
 // Averages 51ms
@@ -30,13 +29,13 @@ fn main() {
     let mut bytes: Vec<u8> = Vec::with_capacity(file_size as usize);
     file.read_to_end(&mut bytes).unwrap();
 
-    let words = bytes.split(|b| *b == b'\n').collect::<Vec<&[u8]>>();
+    let words = bytes.split(|&b| b == b'\n').collect::<Vec<&[u8]>>();
     let convertible_words = words.iter().filter(|word|
-        !word.iter().any(|b| *b == b'q' || *b == b'w' || *b == b'e' || *b == b'z')
+        !word.iter().any(|&b| b == b'q' || b == b'w' || b == b'e' || b == b'z')
     );
 
     let target_words: HashSet<&[u8]> = words.iter().filter(|word|
-        !word.iter().any(|b| *b == b's' || *b == b'v' || *b == b'w' || *b == b'z')
+        !word.iter().any(|&b| b == b's' || b == b'v' || b == b'w' || b == b'z')
     ).cloned().collect();
 
     for word in convertible_words {
