@@ -12,11 +12,12 @@ use std::str;
 // eliminate words with the letters 'q', 'w', 'e', and 'z'
 // from the Qwerty index.
 
-//static QD_MAP: [u8; 26] = [b'a', b'x', b'j', b'e', b'x', b'u', b'i', b'd', b'c', b'h', b't', b'n', b'm', b'b',
+// static QD_MAP: [u8; 26] = [b'a', b'x', b'j', b'e', b'x', b'u', b'i', b'd', b'c', b'h', b't', b'n', b'm', b'b',
 //                           b'r', b'l', b'x', b'p', b'o', b'y', b'g', b'k', b'x', b'q', b'f', b'x'];
 
 
-static DQ_MAP: [u8; 26] = [b'a', b'n', b'i', b'h', b'd', b'y', b'u', b'j', b'g', b'c', b'v', b'p', b'm', b'l', b's', b'r', b's', b'o', 0, b'k', b'f', 0, 0, b'b', b't', 0];
+static DQ_MAP: [u8; 26] = [b'a', b'n', b'i', b'h', b'd', b'y', b'u', b'j', b'g', b'c', b'v', b'p',
+                           b'm', b'l', b's', b'r', b's', b'o', 0, b'k', b'f', 0, 0, b'b', b't', 0];
 
 static ASCII_LOWCASE_A_OFFSET: u8 = 97;
 
@@ -34,18 +35,21 @@ fn main() {
 
     let words = bytes.split(|&b| b == b'\n').collect::<Vec<&[u8]>>();
 
-    let convertible_words = words.iter().filter(|word|
+    let convertible_words = words.iter().filter(|word| {
         !word.iter().any(|&b| b == b's' || b == b'v' || b == b'w' || b == b'z' || b == b'-')
-    );
+    });
 
-    let target_words: HashSet<&[u8]> = words.iter().filter(|word|
-        !word.iter().any(|&b| b == b'q' || b == b'w' || b == b'e' || b == b'z')
-    ).cloned().collect();
+    let target_words: HashSet<&[u8]> = words.iter()
+        .filter(|word| !word.iter().any(|&b| b == b'q' || b == b'w' || b == b'e' || b == b'z'))
+        .cloned()
+        .collect();
 
     for word in convertible_words {
         let converted = word.iter().map(|c| DQ_MAP[idx!(*c)]).collect::<Vec<u8>>();
         if target_words.contains(&*converted) {
-            println!("d:{}|q:{}", str::from_utf8(word).unwrap(), str::from_utf8(&converted).unwrap());
+            println!("d:{}|q:{}",
+                     str::from_utf8(word).unwrap(),
+                     str::from_utf8(&converted).unwrap());
         }
     }
 }
