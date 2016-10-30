@@ -63,6 +63,7 @@ fn main() {
     add_debug_message(&mut messages, "Convert all words", &now);
     add_debug_message(&mut messages, "Total time", &total_now);
 
+    println!("");
     for message in messages {
         println!("{}", message);
     }
