@@ -30,19 +30,21 @@ macro_rules! idx {
 
 fn main() {
     let file = File::open("/usr/share/dict/words").unwrap();
-    let lines = BufReader::new(file).lines().map(|line| line.unwrap());
-    let words: Vec<String> = lines.filter(|word| {
+    let lines: Vec<String> = BufReader::new(file).lines().map(|line| line.unwrap().to_ascii_lowercase()).collect();
+    let words: Vec<String> = lines.iter().filter(|word| {
             !word.chars().any(|c| {
-                c == 'q' || c == 'Q' || c == 'w' || c == 'W' || c == 'e' || c == 'E' || c == 'z' ||
-                c == 'Z'
+                c == 'q' || c == 'w' || c == 'e' || c == 'z'
             })
-        })
+    })
+        .cloned()
         .collect();
     let iter_size = 7;
     let chunk_size = words.len() / iter_size;
     let leftover_words = words.len() - iter_size * chunk_size;
 
-    let index: HashSet<String> = words.iter().map(|word| word.to_ascii_lowercase()).collect();
+    let index: HashSet<String> = words.iter().filter(|word|
+        !word.chars().any(|b| b == 's' || b == 'v' || b == 'w' || b == 'z')
+    ).cloned().collect();
 
     let shared_index = Arc::new(index);
     let shared_words = Arc::new(words);
