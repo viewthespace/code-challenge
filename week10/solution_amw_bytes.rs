@@ -12,10 +12,6 @@ use std::str;
 // eliminate words with the letters 'q', 'w', 'e', and 'z'
 // from the Qwerty index.
 
-// static QD_MAP: [u8; 26] = [b'a', b'x', b'j', b'e', b'x', b'u', b'i', b'd', b'c', b'h', b't', b'n', b'm', b'b',
-//                           b'r', b'l', b'x', b'p', b'o', b'y', b'g', b'k', b'x', b'q', b'f', b'x'];
-
-
 static DQ_MAP: [u8; 26] = [b'a', b'n', b'i', b'h', b'd', b'y', b'u', b'j', b'g', b'c', b'v', b'p',
                            b'm', b'l', b's', b'r', b's', b'o', 0, b'k', b'f', 0, 0, b'b', b't', 0];
 
