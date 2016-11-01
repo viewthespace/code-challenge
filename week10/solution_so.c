@@ -10,16 +10,11 @@ const int Q_TO_D[26] = { 0, 23, 9, 4, -1, 20, 8, 3, 2, 7, 19, 13, 12, 1, 17, 11,
 void puns();
 void traverse(int **nodeQwerrty, int **nodeDvorak, char *wordQwerrty, char *wordDvorak, int wordLength);
 
-int **pages;
-void* shalloc() {
-  const int *p = pages;
-  pages = pages + 27;
-  return p;
-}
 void puns() {
-  pages = malloc(sizeof(int*) * 27 * 520000);
-  const int **root = shalloc();
+  int  **pages = malloc(sizeof(int*) * 27 * 500000);
+  int **root = pages;
   memset(root, 0, sizeof(int*) * 27);
+  pages = pages + 27;
   char buffer[BUFFER_SIZE];
   FILE *file;
   size_t nread;
@@ -34,7 +29,7 @@ void puns() {
         int c = (int)buffer[i];
         if(c == 10) {
           if(!skip) {
-            currentLetter[26] = 1;
+            currentLetter[26] = (int*)1;
           }
           currentLetter = root;
           skip = 0;
@@ -45,10 +40,11 @@ void puns() {
             c += 32;
           }
           c -= 97;
-          if(c == 4 || c == 16 || c == 22 || c == 25) {
+          if(c == 22 || c == 25) {
+            skip = 1;
+          } else if(c == 4 || c == 16) {
             skipa = 1;
-          }
-          if(c == 18 || c == 21 || c == 22 || c == 21) {
+          } if(c == 18 || c == 21) {
             skipb = 1;
           }
           if(skipa && skipb) {
@@ -56,23 +52,24 @@ void puns() {
           }
           if(!skip){
             if((!(currentLetter[c]))) {
-              currentLetter[c] = shalloc();
+              currentLetter[c] = (int*)pages;
+              pages = pages + 27;
             }
-            currentLetter = currentLetter[c];
+            currentLetter = (int**)currentLetter[c];
           }
         }
       }
     }
     fclose(file);
-    const char wordQwerrty[50] = {0};
-    const char wordDvorak[50] = {0};
+    char wordQwerrty[50] = {0};
+    char wordDvorak[50] = {0};
     traverse(root, root, wordQwerrty, wordDvorak, 0);
   }
 }
 
 void traverse(int **nodeQwerrty, int **nodeDvorak, char wordQwerrty[], char wordDvorak[], int wordLength) {
   if(nodeQwerrty[26] && nodeDvorak[26]) {
-    printf("q:%s|d:%s\n", (char*)wordQwerrty, (char*)wordDvorak);
+    printf("q:%s|d:%s\n", wordQwerrty, wordDvorak);
   }
   for(int i = 0; i < 26; i++) {
     if(Q_TO_D[i] != -1 && nodeQwerrty[i] && nodeDvorak[Q_TO_D[i]]) {
