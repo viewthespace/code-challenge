@@ -21,7 +21,7 @@ class PunMatcher(wordsPath: String) {
   
   val qwertyToDvorak = HashMap('a' -> 'a', 'b' -> 'x', 'c' -> 'j', 'd' -> 'e', 'e' -> '.', 'f' -> 'u'
   , 'g' -> 'i', 'h' -> 'd', 'i' -> 'c', 'j' -> 'h', 'k' -> 't', 'l' -> 'n', 'm' -> 'm', 'n' -> 'b'
-  , 'o' -> 'r', 'p' -> 'l', 'q' -> ''', 'r' -> 'p', 's' -> 'o', 't' -> 'y', 'u' -> 'g', 'v' -> 'k'
+  , 'o' -> 'r', 'p' -> 'l', 'q' -> '\'', 'r' -> 'p', 's' -> 'o', 't' -> 'y', 'u' -> 'g', 'v' -> 'k'
   , 'w' -> ',', 'x' -> 'q', 'y' -> 'f', 'z' -> ';')
   val dvorakToQwerty = HashMap ('a' -> 'a', 'b' -> 'n', 'c' -> 'i', 'd' -> 'h', 'e' -> 'd', 'f' -> 'y'
   , 'g' -> 'u', 'h' -> 'j', 'i' -> 'g', 'j' -> 'c', 'k' -> 'v', 'l' -> 'p', 'm' -> 'm', 'n' -> 'l'
