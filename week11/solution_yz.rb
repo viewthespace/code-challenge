@@ -22,14 +22,14 @@ class RealEstatePortfolio
 
     so_much_winning = @win if @bigness.cover?(here_and_now)
 
-    if @hotels
-      win_at_hotels = @hotels.winning(here_and_now) unless @hotels.win_so_much < so_much_winning
-      so_much_winning = win_at_hotels if win_at_hotels && win_at_hotels > so_much_winning
+    if @hotels && @hotels.win_so_much >= so_much_winning
+      win_at_hotels = @hotels.winning(here_and_now)
+      so_much_winning = win_at_hotels if win_at_hotels > so_much_winning
     end
 
-    if @casinos
-      win_at_casinos = @casinos.winning(here_and_now) unless @casinos.win_so_much < so_much_winning
-      so_much_winning = win_at_casinos if win_at_casinos && win_at_casinos > so_much_winning
+    if @casinos && @casinos.win_so_much >= so_much_winning
+      win_at_casinos = @casinos.winning(here_and_now)
+      so_much_winning = win_at_casinos if win_at_casinos > so_much_winning
     end
 
     so_much_winning
