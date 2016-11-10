@@ -13,6 +13,7 @@ class RealEstatePortfolio
     return build_it(*best_building) if @bigness.nil?
     hotel_or_casino?(*best_building) ? erect_hotel(best_building) : erect_casino(best_building)
     add_to_portfolio *best_building
+    self
   end
 
   def winning(here_and_now)
@@ -51,7 +52,6 @@ class RealEstatePortfolio
   def add_to_portfolio(leftness, rightness, tallness)
     @bestness = rightness if rightness > @bestness
     @win_so_much = tallness if tallness > @win_so_much
-    self
   end
 
   def erect_hotel(hotel)
@@ -77,7 +77,9 @@ class YzSolutionWeek11
 
     hotels_and_casinos.flat_map { |b| b.take(2) }.uniq.sort.each do |here_and_now|
       winning = portfolio.winning here_and_now
-      so_much_winning  << [here_and_now, winning] unless winning == tired_of_winning
+      next if winning == tired_of_winning
+
+      so_much_winning << [here_and_now, winning]
       tired_of_winning = winning
     end
 
