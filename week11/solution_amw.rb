@@ -22,22 +22,22 @@ def resolve_key_point(x, max_y, xn, max_yn)
   end
 end
 
-def find_key_points(x_to_ys)
+def find_key_points(overlapping_heights)
   key_points = []
-  xs = x_to_ys.keys.sort
-  key_points << x_to_ys[xs[0]]
+  xs = overlapping_heights.keys.sort
+  key_points << [xs[0], overlapping_heights[xs[0]].max]
   xs.each_with_index do |x, i|
     next if i == xs.count - 1
 
-    ys_for_x = x_to_ys[x]
+    heights_for_x = overlapping_heights[x]
     xn = xs[i + 1]
-    ys_for_xn = x_to_ys[xn]
+    heights_for_xn = overlapping_heights[xn]
 
-    max_ys_x = ys_for_x.max
-    max_ys_xn = ys_for_xn.max
+    max_height_x = heights_for_x.max
+    max_height_xn = heights_for_xn.max
 
-    if max_ys_x != max_ys_xn
-      key_points << resolve_key_point(x, max_ys_x, xn, max_ys_xn)
+    if max_height_x != max_height_xn
+      key_points << resolve_key_point(x, max_height_x, xn, max_height_xn)
     end
   end
   key_points
@@ -54,8 +54,8 @@ buildings = [
 all_points = buildings.reduce([]) { |a, b| a + expand_coords(b) }
 #all_points.each { |c| puts c.to_s }
 
-x_to_ys = collapse_heights(all_points)
-x_to_ys.each { |k, v| puts "#{k} => #{v.to_s}" }
+overlapping_heights = collapse_heights(all_points)
+overlapping_heights.each { |k, v| puts "#{k} => #{v.to_s}" }
 
-key_points = find_key_points(x_to_ys)
+key_points = find_key_points(overlapping_heights)
 key_points.each { |kp| puts kp.to_s }
