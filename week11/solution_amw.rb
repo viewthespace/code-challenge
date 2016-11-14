@@ -15,7 +15,13 @@ def collapse_heights(coords)
 end
 
 def resolve_key_point(x, max_y, xn, max_yn)
-  max_yn > max_y ? [xn, max_yn] : [x, max_yn]
+  if xn != x + 1
+    [[x, 0], [xn, max_yn]]
+  elsif max_yn > max_y
+    [[xn, max_yn]]
+  else
+    [[x, max_yn]]
+  end
 end
 
 def find_key_points(overlapping_heights)
@@ -34,9 +40,11 @@ def find_key_points(overlapping_heights)
     max_height_xn = heights_for_xn.max
 
     if max_height_x != max_height_xn
-      key_points << resolve_key_point(x, max_height_x, xn, max_height_xn)
+      key_points += resolve_key_point(x, max_height_x, xn, max_height_xn)
     end
   end
+  last_x = xs.last
+  key_points << [last_x, 0]
   key_points
 end
 
