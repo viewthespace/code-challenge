@@ -46,14 +46,14 @@ HeapNode* heap_insert(Heap *heap, int val) {
     if(heap_gt(heap, child->val, parent->val)) {
       heap_node_swap(child, parent);
     } else {
-      break;
+      return child;
     }
   }
-  if(parent && parent->val == val) {
+  if (parent) {
     return parent;
   } else {
     return child;
-  }
+  };
 }
 
 HeapNode* heap_remove(Heap *heap, HeapNode *node) {
@@ -122,5 +122,5 @@ int heap_node_swap (HeapNode *node_one, HeapNode *node_two) {
   if(node_two->heap_node_ref) {
     node_two->heap_node_ref->heap_node_ref = node_two;
   }
-
+  return 0;
 }
