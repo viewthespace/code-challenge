@@ -8,6 +8,6 @@ def c(v, w)
 
     return -1 if x < y
     return 1 if x > y
-    return 0 if x == y && (v[i].nil? || w[i].nil?)
+    return 0 if x == y && v[i].nil? && w[i].nil?
   end
 end
