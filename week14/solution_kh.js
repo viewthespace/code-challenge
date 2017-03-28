@@ -5,9 +5,9 @@ function (a, b) {
   let maxList,minlist
   if(as.length > bs.length){maxlist=as;minlist=bs}
   for (let i = maxList.length; i > -1; i--) {
-    let x, y
-    if ((x=maxList[i]) != (y=minList[i]))
-      return !!(x > y)
+    let x=maxList[i], y=minList[i]
+    if [x, y].includes(null) break
+    if (x != y) return !!(x > y)
   }
   return 0
 }
