@@ -1,0 +1,6 @@
+[package]
+name = "solution_kh"
+version = "0.1.0"
+authors = ["Kyle Holzinger <kylelholzinger@gmail.com>"]
+
+[dependencies]
