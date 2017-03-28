@@ -28,7 +28,6 @@ fn main() {
 
     match compared.len() {
         0 => println!("{}", 0),
-        x if x > 0 => println!("{}", compared[0]),
-        _ => println!("{}", "Not sure what happened."),
+        _ => println!("{}", compared[0]),
     };
 }
