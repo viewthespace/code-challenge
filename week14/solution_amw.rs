@@ -5,7 +5,7 @@ fn cmp(v1: &str, v2: &str) -> Option<isize> {
     match v1.partial_cmp(v2) {
         Some(Ordering::Less) => Some(-1),
         Some(Ordering::Greater) => Some(1),
-        _ => None
+        _ => None,
     }
 }
 
@@ -18,11 +18,8 @@ fn n(v: &str) -> Vec<&str> {
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    let v1 = &args[1];
-    let v2 = &args[2];
-
-    let v1n = n(v1);
-    let v2n = n(v2);
+    let v1n = n(&args[1]);
+    let v2n = n(&args[2]);
 
     let compared = v1n.iter()
         .zip(v2n)
@@ -32,6 +29,6 @@ fn main() {
     match compared.len() {
         0 => println!("{}", 0),
         x if x > 0 => println!("{}", compared[0]),
-        _ => println!("{}", "Not sure what happened.")
+        _ => println!("{}", "Not sure what happened."),
     };
 }
