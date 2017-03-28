@@ -26,8 +26,9 @@ fn main() {
         .filter_map(|p| cmp(p.0, p.1))
         .collect::<Vec<isize>>();
 
-    match compared.len() {
-        0 => println!("{}", 0),
-        _ => println!("{}", compared[0]),
-    };
+    println!("{}",
+             match compared.len() {
+                 0 => 0,
+                 _ => compared[0],
+             });
 }
