@@ -1,10 +1,19 @@
-import functools
+import functools as f
+import random as r
 
 def money(arr):
-    return functools.reduce(
-        lambda agg, x: [min(agg[0], x), max(agg[1], x), max(x - agg[0], agg[2])],
+    return f.reduce(
+        lambda agg, x: [min(agg[0], x), max(0, max(x - agg[0], agg[1]))],
         arr,
-        [float('inf'), float('-inf'), float('-inf')]
-    )[2]
+        [float('inf'), float('-inf')]
+    )
 
-print(money([ 220, 214, 60, 110, 55, 126, 42 ]))
+while(True):
+    l = [r.randint(0, 12) for _ in range(r.randint(2, 7))]
+    x = money(l)
+    print(l)
+    print(x)
+    print('Generated list:\n\n%s\n\nThe greatest positive sequential difference is %i\n' % (l, x[1]))
+    if input("Would you like to continue? [yN] ") is not "y":
+        break
+    print()
