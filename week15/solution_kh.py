@@ -1,17 +1,10 @@
+import functools
+
 def money(arr):
-    a = {}
-    a["💩"] = float("inf")
-    a["🏆"] = float("-inf")
-    a["🤑"]= float("-inf")
+    return functools.reduce(
+        lambda agg, x: [min(agg[0], x), max(agg[1], x), max(x - agg[0], agg[2])],
+        arr,
+        [float('inf'), float('-inf'), float('-inf')]
+    )[2]
 
-    for el in arr:
-        if el < a["💩"]:
-            a["💩"] = el
-        elif el > a["🏆"]:
-            a["🏆"] = el
-
-        tmp = el - a["💩"]
-        if tmp > a["🤑"]:
-            a["🤑"] = tmp
-    return a["🤑"]
-
+print(money([ 220, 214, 60, 110, 55, 126, 42 ]))
