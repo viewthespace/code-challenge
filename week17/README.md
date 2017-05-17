@@ -6,7 +6,7 @@ For this challenge, you'll be given various IPv4 addresses and subnets and asked
 
 # Input Description
 
-You'll be given a single integer and then list of IPv4 host and addresses addresses, containing that many lines of input. Examples:
+You'll be given a single integer and then list of IPv4 addresses, containing that many lines of input. Examples:
 
 ```
 3
