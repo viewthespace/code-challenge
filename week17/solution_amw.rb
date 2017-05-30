@@ -32,30 +32,30 @@ def pad_bits(significant_bits)
   7.downto(8 - significant_bits).reduce(0) { |a, e| a + 2**e }
 end
 
-def max_octets(cidr, significant_octets, num_bits)
+def calculate_max_octets(cidr, significant_octets, num_bits)
   remaining_bits = num_bits.to_i % 8
-  sections = address_sections(cidr)
+  octets = octets(cidr)
   if remaining_bits.zero?
-    sections.take(significant_octets)
+    octets.take(significant_octets)
   else
-    sections.take(significant_octets - 1) << pad_bits(remaining_bits)
+    octets.take(significant_octets - 1) << pad_bits(remaining_bits)
   end
 end
 
-def max_address_sections(cidr)
+def max_octets(cidr)
   num_bits = bit_suffix(cidr)
   num_octets = significant_octets(num_bits)
-  sections = max_octets(cidr, num_octets, num_bits)
-  (4 - num_octets).times { sections << 255 }
-  sections
+  octets = calculate_max_octets(cidr, num_octets, num_bits)
+  (4 - num_octets).times { octets << 255 }
+  octets
 end
 
-def address_sections(cidr)
+def octets(cidr)
   cidr.split('/')[0].split('.').map(&:to_i)
 end
 
-def to_i(sections)
-  sections.reverse.map.with_index { |e, i| e * 1 << (8 * i) }.reduce(&:+)
+def to_i(octets)
+  octets.reverse.map.with_index { |e, i| e * 1 << (8 * i) }.reduce(&:+)
 end
 
 def within?(range1, range2)
@@ -63,9 +63,9 @@ def within?(range1, range2)
 end
 
 def to_range(cidr)
-  sections = address_sections(cidr)
-  max_sections = max_address_sections(cidr)
-  to_i(sections)..to_i(max_sections)
+  initial_octets = octets(cidr)
+  max_octets = max_octets(cidr)
+  to_i(initial_octets)..to_i(max_octets)
 end
 
 def remove_indexes(collection, indexes)
@@ -97,6 +97,7 @@ def solve(input)
   end
   puts 'Result'
   puts covering_set
+  puts
 end
 
 solve(INPUT_SHORT)
