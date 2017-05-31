@@ -17,21 +17,28 @@ let read_input =
 ;;
 
 
-let cidr_of_string xs = xs
+let cidr_of_string s = s
+;;
+
+let string_of_cidr s = s
+;;
+
+let strings_to_bin xs = xs
+;;
+
+let strings_to_cidr xs = xs
 ;;
 
 let remove_dupes xs = xs
 ;;
 
-let string_of_cidr xs = xs
-;;
 
 
 let () =
   read_input |>
-    string_of_cidr |>
+    strings_to_bin |>
     remove_dupes |>
-    cidr_of_string |>
+    strings_to_cidr |>
     print_list
 ;;
 

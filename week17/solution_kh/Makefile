@@ -13,7 +13,10 @@ build_docs:
 docs: build_docs
 	open docs/Solution_kh.html
 
-clean:
+clean_docs:
+	@rm docs/* &> /dev/null || true
+
+clean: clean_docs
 	@if [ -a ./_build/sanitize.sh ] ; \
 		then \
 		_build/sanitize.sh ; \

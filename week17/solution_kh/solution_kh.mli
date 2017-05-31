@@ -15,16 +15,26 @@ val print_list : string list -> unit ;;
 
 (** {6 Week 17 solution} *)
 
-val cidr_of_string : string list -> string list ;;
-(** Translates from [xxxxxxxx.xxxxxxxx.xxxxxxxx.xxxxxxxx] notation
+val cidr_of_string : string -> string ;;
+(** Translates from binary notation
   to CIDR notation
+*)
+
+val string_of_cidr : string -> string ;;
+(** Translates from CIDR notation to binary notation
+*)
+
+val strings_to_bin : string list -> string list ;;
+(** Translates a list of strings from CIDR notation to
+  binary notation
+*)
+
+val strings_to_cidr : string list -> string list ;;
+(** Translates a list of strings from binary notation to
+  CIDR notation
 *)
 
 val remove_dupes : string list -> string list ;;
 (** Removes the unnecessary subnets from xs *)
 
-val string_of_cidr : string list -> string list ;;
-(** Translates from CIDR notation to
- [xxxxxxxx.xxxxxxxx.xxxxxxxx.xxxxxxxx] notation
-*)
 
