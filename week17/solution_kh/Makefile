@@ -21,3 +21,6 @@ clean:
 		rm -rf _build solution_kh.cmi solution_kh.native; \
 		fi;
 
+test: all
+	@bash -c 'echo -e "\n\n\e[1mSample data:\e[0m\n"' && cat sample.txt | ./solution_kh.native
+
