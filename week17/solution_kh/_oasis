@@ -1,0 +1,16 @@
+Name: Week17
+Version: 0.0.0
+Synopsis: week 17
+Authors: Kyle Holzinger <kylelholzinger@gmail.com>
+License: https://www.mozilla.org/en-US/MPL/2.0/
+
+OASISFormat: 0.4
+BuildTools: ocamlbuild
+Plugins: META (0.4), DevFiles (0.4)
+
+Executable "week17"
+  Path: src
+  MainIs: solution_kh.ml
+  CompiledObject: best
+  BuildDepends:
+    str

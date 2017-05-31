@@ -1,29 +1,41 @@
-all: clean build compile_mli build_docs
-	@echo Done!
+# OASIS_START
+# DO NOT EDIT (digest: a3c674b4239234cbbe53afe090018954)
 
-compile_mli:
-	ocamlc -c solution_kh.mli
+SETUP = ocaml setup.ml
 
-build:
-	ocamlbuild solution_kh.native
+build: setup.data
+	$(SETUP) -build $(BUILDFLAGS)
 
-build_docs:
-	ocamldoc -html -d docs solution_kh.mli
+doc: setup.data build
+	$(SETUP) -doc $(DOCFLAGS)
 
-docs: build_docs
-	open docs/Solution_kh.html
+test: setup.data build
+	$(SETUP) -test $(TESTFLAGS)
 
-clean_docs:
-	@rm docs/* &> /dev/null || true
+all:
+	$(SETUP) -all $(ALLFLAGS)
 
-clean: clean_docs
-	@if [ -a ./_build/sanitize.sh ] ; \
-		then \
-		_build/sanitize.sh ; \
-		else \
-		rm -rf _build solution_kh.cmi solution_kh.native; \
-		fi;
+install: setup.data
+	$(SETUP) -install $(INSTALLFLAGS)
 
-test: all
-	@bash -c 'echo -e "\n\n\e[1mSample data:\e[0m\n"' && cat sample.txt | ./solution_kh.native
+uninstall: setup.data
+	$(SETUP) -uninstall $(UNINSTALLFLAGS)
 
+reinstall: setup.data
+	$(SETUP) -reinstall $(REINSTALLFLAGS)
+
+clean:
+	$(SETUP) -clean $(CLEANFLAGS)
+
+distclean:
+	$(SETUP) -distclean $(DISTCLEANFLAGS)
+
+setup.data:
+	$(SETUP) -configure $(CONFIGUREFLAGS)
+
+configure:
+	$(SETUP) -configure $(CONFIGUREFLAGS)
+
+.PHONY: build doc test all install uninstall reinstall clean distclean configure
+
+# OASIS_STOP
