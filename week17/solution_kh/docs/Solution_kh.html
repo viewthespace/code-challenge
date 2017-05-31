@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="Up" href="index.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Solution_kh" rel="Chapter" href="Solution_kh.html"><link title="Utility functions" rel="Section" href="#6_Utilityfunctions">
+<link title="Week 17 solution" rel="Section" href="#6_Week17solution">
+<title>Solution_kh</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;</div>
+<h1>Module <a href="type_Solution_kh.html">Solution_kh</a></h1>
+
+<pre><span class="keyword">module</span> Solution_kh: <code class="code">sig</code> <a href="Solution_kh.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Week 17
+<p>
+
+  Your program should emit the minimal covering set of
+  the network addresses to remove ones already specified
+  by the network addresses.<br>
+</div>
+<hr width="100%">
+<br>
+<h6 id="6_Utilityfunctions">Utility functions</h6><br>
+
+<pre><span id="VALread_input"><span class="keyword">val</span> read_input</span> : <code class="type">string list</code></pre><div class="info ">
+Reads in lines of text where the first line is n<br>
+</div>
+
+<pre><span id="VALprint_list"><span class="keyword">val</span> print_list</span> : <code class="type">string list -> unit</code></pre><div class="info ">
+Prints out a list of strings<br>
+</div>
+<br>
+<h6 id="6_Week17solution">Week 17 solution</h6><br>
+
+<pre><span id="VALcidr_of_string"><span class="keyword">val</span> cidr_of_string</span> : <code class="type">string -> string</code></pre><div class="info ">
+Translates from binary notation
+  to CIDR notation<br>
+</div>
+
+<pre><span id="VALstring_of_cidr"><span class="keyword">val</span> string_of_cidr</span> : <code class="type">string -> string</code></pre><div class="info ">
+Translates from CIDR notation to binary notation<br>
+</div>
+
+<pre><span id="VALstrings_to_bin"><span class="keyword">val</span> strings_to_bin</span> : <code class="type">string list -> string list</code></pre><div class="info ">
+Translates a list of strings from CIDR notation to
+  binary notation<br>
+</div>
+
+<pre><span id="VALstrings_to_cidr"><span class="keyword">val</span> strings_to_cidr</span> : <code class="type">string list -> string list</code></pre><div class="info ">
+Translates a list of strings from binary notation to
+  CIDR notation<br>
+</div>
+
+<pre><span id="VALremove_dupes"><span class="keyword">val</span> remove_dupes</span> : <code class="type">string list -> string list</code></pre><div class="info ">
+Removes the unnecessary subnets from xs<br>
+</div>
+</body></html>
