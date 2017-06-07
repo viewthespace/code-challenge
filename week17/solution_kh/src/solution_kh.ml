@@ -7,6 +7,7 @@ let rec print_list = function
 ;;
 
 let read_input =
+  let () = print_string "reading from stdin...\n" in
   let n = read_line() |> int_of_string in
   let rec aux xs = function
     | 0 -> xs
@@ -25,6 +26,15 @@ let pad_left ?(c=" ") n s =
     aux s (n - len)
 ;;
 
+let pad_right ?(c=" ") n s =
+  let len = String.length s in
+  let rec aux s = function
+    | 0 -> s
+    | n -> aux (s ^ c) (n - 1)
+  in
+    aux s (n - len)
+;;
+
 let join ?(c=",") xs =
   let rec aux s = function
     | [] -> s
@@ -35,33 +45,41 @@ let join ?(c=",") xs =
       | h :: t -> aux h t
 ;;
 
-let cidr_of_string s =
-  let [ range; mask  ] = Str.split (Str.regexp "/") s in
-  let nums = Str.split (Str.regexp "\\.") range in
-  let dec_to_bin_helper = function 1->"1" | 0->"0" in
-  let dec_to_bin s =
-    let rec d2b y bin =
-      match y with
-        | 0 -> bin
-        | _ -> d2b (y/2) ((dec_to_bin_helper (y mod 2)) ^ bin )
-    in
-      d2b s ""
+let bin_of_dec s =
+  let rec d2b y bin =
+    match y with
+      | 0 -> bin
+      | _ -> d2b (y/2) ((string_of_int (y mod 2)) ^ bin )
   in
-    (List.map
-      (fun s -> (s |>
-                   int_of_string |>
-                   dec_to_bin |>
-                   pad_left ~c:"0" 8
-      ))
-      nums) |>
-       join ~c:"-"
+    d2b s ""
+;;
+
+
+let mask_cidr_address n s =
+  pad_right ~c:"x" 32 (Str.string_before s n)
+;;
+
+let bin_of_string s =
+  let [ range; mask  ] = Str.split (Str.regexp "/") s in
+  let nums = Str.split (Str.regexp "\\.") range
+  in
+    nums |>
+      List.map (fun s ->
+                  (s |>
+                     int_of_string |>
+                     bin_of_dec |>
+                     pad_left ~c:"0" 8)
+      ) |>
+      join ~c:"" |>
+      mask_cidr_address (int_of_string mask)
 ;;
 
 let string_of_cidr s = s
 ;;
 
 let strings_to_bin xs =
-  List.map (cidr_of_string) xs
+  let () = print_string "translating to binary form...\n" in
+  List.map (bin_of_string) xs
 ;;
 
 let strings_to_cidr xs = xs

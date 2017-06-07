@@ -13,11 +13,14 @@ val read_input : string list ;;
 val print_list : string list -> unit ;;
 (** Prints out a list of strings *)
 
+val bin_of_dec : int -> string ;;
+(** Converts an integer to that number in binary as a string *)
+
 (** {6 Week 17 solution} *)
 
-val cidr_of_string : string -> string ;;
+val bin_of_string : string -> string ;;
 (** Translates from binary notation
-  to CIDR notation
+  to binary notation
 *)
 
 val string_of_cidr : string -> string ;;
