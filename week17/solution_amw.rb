@@ -20,42 +20,27 @@ INPUT_FULL = [
   '172.24.168.32/32'
 ].freeze
 
-def significant_octets(bits)
-  (bits.to_f / 8).ceil
-end
+ALL_ONES = 0xffffffff
 
 def bit_suffix(cidr)
-  cidr.split('/')[1]
+  cidr.split('/')[1].to_i
 end
 
-def pad_bits(significant_bits)
-  7.downto(8 - significant_bits).reduce(0) { |a, e| a + 2**e }
+def address(cidr)
+  cidr.split('/')[0]
 end
 
-def calculate_max_octets(cidr, significant_octets, num_bits)
-  remaining_bits = num_bits.to_i % 8
-  octets = octets(cidr)
-  if remaining_bits.zero?
-    octets.take(significant_octets)
-  else
-    octets.take(significant_octets - 1) << pad_bits(remaining_bits)
-  end
-end
-
-def max_octets(cidr)
-  num_bits = bit_suffix(cidr)
-  num_octets = significant_octets(num_bits)
-  octets = calculate_max_octets(cidr, num_octets, num_bits)
-  (4 - num_octets).times { octets << 255 }
-  octets
+def max_address(cidr)
+  initial_address = to_i(address(cidr))
+  initial_address | (ALL_ONES >> (bit_suffix(cidr)))
 end
 
 def octets(cidr)
   cidr.split('/')[0].split('.').map(&:to_i)
 end
 
-def to_i(octets)
-  octets.reverse.map.with_index { |e, i| e * 1 << (8 * i) }.reduce(&:+)
+def to_i(ip)
+  octets(ip).reverse.map.with_index { |e, i| e * 1 << (8 * i) }.reduce(&:+)
 end
 
 def within?(range1, range2)
@@ -63,9 +48,7 @@ def within?(range1, range2)
 end
 
 def to_range(cidr)
-  initial_octets = octets(cidr)
-  max_octets = max_octets(cidr)
-  to_i(initial_octets)..to_i(max_octets)
+  to_i(address(cidr))..max_address(cidr)
 end
 
 def remove_indexes(collection, indexes)
