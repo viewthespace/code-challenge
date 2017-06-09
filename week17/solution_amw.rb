@@ -32,7 +32,7 @@ end
 
 def max_address(cidr)
   initial_address = to_i(address(cidr))
-  initial_address | (ALL_ONES >> (bit_suffix(cidr)))
+  initial_address | (ALL_ONES >> bit_suffix(cidr))
 end
 
 def octets(cidr)
