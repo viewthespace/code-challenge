@@ -38,13 +38,13 @@ class BinaryTree
   end
 
   def traverse(depth_map, &blk)
-      _traverse(@root_node, depth_map, :root, 0, &blk)
+      _traverse(@root_node, depth_map, 0, &blk)
   end
 
-  def _traverse(parent, depth_map, direction, depth, &blk)
+  def _traverse(parent, depth_map, depth, &blk)
     yield parent if parent
-    _traverse(parent.left, depth_map, :left, depth + 1, &blk)   if parent.left
-    _traverse(parent.right, depth_map, :right, depth + 1, &blk) if parent.right
+    _traverse(parent.left, depth_map, depth + 1, &blk)   if parent.left
+    _traverse(parent.right, depth_map, depth + 1, &blk) if parent.right
     depth_map[parent] = depth if parent.left.nil? && parent.right.nil?
   end
 end
