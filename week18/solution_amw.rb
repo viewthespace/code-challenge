@@ -1,3 +1,9 @@
+# Runtime Complexity: O(n)
+#
+# Determines whether or not a binary tree is balanced
+# by calculating the heights of each leaf node and ensuring
+# that the max height is no more than 1 greater than the min
+# height.
 class Node
   attr_accessor :left, :right
   attr_reader :value
