@@ -13,7 +13,7 @@ A chess knight has 8 possible moves it can make, as illustrated below. Each move
 ![knight](https://user-images.githubusercontent.com/439933/31634734-82c6268a-b292-11e7-804b-86a2c709461d.png)
 
 Example:
-```Ruby
+```
 Input: 3, 2, 0, 0
 Output: 0.0625
 Explanation: There are two moves (to (1,2), (2,1)) that will keep the knight on the board.
@@ -22,6 +22,6 @@ The total probability the knight stays on the board is 0.0625.
 ```
 
 Notes:
-`N` will be between 1 and 25.
-`K` will be between 0 and 100.
-The knight always initially starts on the board.
+* `N` will be between 1 and 25.
+* `K` will be between 0 and 100.
+* The knight always initially starts on the board.
