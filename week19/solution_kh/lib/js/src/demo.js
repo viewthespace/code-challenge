@@ -72,7 +72,9 @@ var directions = /* :: */[
   ]
 ];
 
-function getValidMoves(n, x, y) {
+function getValidMoves(n, param) {
+  var y = param[1];
+  var x = param[0];
   var aux = function (direction) {
     switch (direction) {
       case 0 : 
@@ -196,17 +198,37 @@ function getValidMoves(n, x, y) {
               }), /* [] */0, validMapPositions);
 }
 
-function willHeDie(_, _$1, _$2, _$3) {
-  var aux = function () {
-    return 0;
+function willHeDie(n, k, x, y) {
+  var expandMoves = function (_k, position, _movesToExpand) {
+    while(true) {
+      var movesToExpand = _movesToExpand;
+      var k = _k;
+      if (k !== 0) {
+        var validMoves = getValidMoves(n, position);
+        _movesToExpand = List.concat(/* :: */[
+              validMoves,
+              /* :: */[
+                movesToExpand,
+                /* [] */0
+              ]
+            ]);
+        _k = k - 1 | 0;
+        continue ;
+        
+      } else {
+        return movesToExpand;
+      }
+    };
   };
-  var allMoves = List.map(aux, directions);
-  return List.fold_left((function (a, _) {
-                return a;
-              }), 0, allMoves);
+  var initialPosition = /* tuple */[
+    x,
+    y
+  ];
+  var allPositions = expandMoves(k, initialPosition, /* [] */0);
+  return List.length(allPositions) / Math.pow(List.length(directions), k);
 }
 
-console.log(Pervasives.string_of_float(willHeDie(1, 2, 3, 4)));
+console.log(Pervasives.string_of_float(willHeDie(3, 2, 0, 0)));
 
 exports.$neg$neg      = $neg$neg;
 exports.$neg$neg$neg  = $neg$neg$neg;

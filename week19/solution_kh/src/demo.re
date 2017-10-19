@@ -22,7 +22,7 @@ let directions = [NNW, NNE, ENE, ESE, SSE, SSW, WSW, WNW];
 
 type coordinate = (int, int);
 
-let getValidMoves n x y => {
+let getValidMoves n ((x, y): coordinate) => {
   let aux direction =>
     switch direction {
     | NNW => x - 1 >= 0 && y - 2 >= 0 ? (x - 1, y - 2) : ((-1), (-1))
@@ -42,13 +42,18 @@ let getValidMoves n x y => {
 };
 
 let willHeDie n k x y => {
-  let aux direction =>
+  let rec expandMoves (k: int) (position: coordinate) (movesToExpand: list coordinate) =>
     switch k {
-    | 0 => 0
-    | _ => 0
+    | 0 => movesToExpand
+    | _ =>
+      let validMoves = getValidMoves n position;
+      expandMoves (k - 1) position (List.concat [validMoves, movesToExpand])
     };
-  let allMoves = List.map aux directions;
-  List.fold_left (fun a _ => a) 0. allMoves
+  let initialPosition = (x, y);
+  let allPositions: list coordinate = expandMoves k initialPosition [];
+  float_of_int (List.length allPositions)
+  /. float_of_int (List.length directions)
+  *\* float_of_int k
 };
 
-print_endline (string_of_float (willHeDie 1 2 3 4));
+print_endline (string_of_float (willHeDie 3 2 0 0));
