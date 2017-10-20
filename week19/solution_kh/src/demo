@@ -22,24 +22,15 @@ let directions = [NNW, NNE, ENE, ESE, SSE, SSW, WSW, WNW];
 
 type coordinate = (int, int);
 
-let print_coordinate (coord: coordinate) => {
-  print_string "(";
+let print_coordinate (coord: coorindate) => {
   print_int (fst coord);
   print_char ',';
   print_int (snd coord);
-  print_string ")"
+  print_endline ""
 };
 
 let print_coordinates (xs: list coordinate) =>
-  List.fold_left
-    (
-      fun _ (coord: coordinate) => {
-        print_coordinate coord;
-        print_string ", "
-      }
-    )
-    ()
-    xs;
+  List.fold_left (fun _ (coord: coordinate) => print_coordinate coord) () xs;
 
 let getValidMoves n ((x, y): coordinate) => {
   let aux direction =>
@@ -66,27 +57,15 @@ let willHeDie n k x y => {
     | 0 => movesToExpand
     | _ =>
       let validMoves = getValidMoves n position;
-      /* print_string ("Moves for iteration " ^ string_of_int k ^ ": ");
-         print_coordinates validMoves;
-         print_endline ""; */
-      let allMoves = List.concat [movesToExpand, validMoves];
-      List.fold_left (fun agg x => expandMoves (k - 1) x allMoves) [] allMoves
+      print_coordinates validMoves;
+      print_endline "";
+      expandMoves (k - 1) position (List.concat [movesToExpand, validMoves])
     };
   let initialPosition = (x, y);
   let allPositions: list coordinate = expandMoves k initialPosition [];
-  print_string (
-    "\nYou made "
-    ^ string_of_int (List.length allPositions)
-    ^ "/"
-    ^ string_of_int (int_of_float (float_of_int (List.length directions) *\* float_of_int k))
-    ^ " moves\n\n\n"
-  );
-  print_string "All moves: ";
-  print_coordinates allPositions;
-  print_endline "\n";
   float_of_int (List.length allPositions)
   /. float_of_int (List.length directions)
   *\* float_of_int k
 };
 
-print_endline (string_of_float (willHeDie 25 4 0 0));
+print_endline (string_of_float (willHeDie 3 2 0 0));
