@@ -61,6 +61,7 @@ let getValidMoves n ((x, y): coordinate) => {
 };
 
 let willHeDie n k x y => {
+  let cache = Hashtbl.create (n * k);
   let rec expandMoves (k: int) (position: coordinate) (movesToExpand: list coordinate) =>
     switch k {
     | 0 => movesToExpand
@@ -70,7 +71,17 @@ let willHeDie n k x y => {
          print_coordinates validMoves;
          print_endline ""; */
       let allMoves = List.concat [movesToExpand, validMoves];
-      List.fold_left (fun agg x => expandMoves (k - 1) x allMoves) [] allMoves
+      List.fold_left
+        (
+          fun agg x => {
+            let moves =
+              Hashtbl.mem cache x ? Hashtbl.find cache x : expandMoves (k - 1) x allMoves;
+            Hashtbl.add cache x moves;
+            moves
+          }
+        )
+        []
+        allMoves
     };
   let initialPosition = (x, y);
   let allPositions: list coordinate = expandMoves k initialPosition [];
@@ -89,4 +100,4 @@ let willHeDie n k x y => {
   *\* float_of_int k
 };
 
-print_endline (string_of_float (willHeDie 25 4 0 0));
+print_endline (string_of_float (willHeDie 3 2 0 0));
