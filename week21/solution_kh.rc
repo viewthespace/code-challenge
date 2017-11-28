@@ -1,0 +1,46 @@
+use std::io::{self, Read};
+use std::cmp;
+
+fn main() {
+  let mut input = String::new();
+  io::stdin().read_to_string(&mut input)
+    .ok();
+
+  let strs: Vec<&str> = input.split(" ").collect();
+  let mut xs: Vec<i32> = strs.iter().map(|x| x.trim().parse::<i32>().unwrap()).collect();
+  println!("input array: {:?}", xs);
+
+  let mut nums: Vec<i32> = vec![1];
+
+  nums.append(&mut xs);
+  nums.append(&mut vec![1]);
+
+  println!("max number of coins is {}", mulah(nums));
+}
+
+fn mulah(xs: Vec<i32>) -> i32 {
+  let n = xs.len();
+  let mut memo: [[i32; 500]; 500] = [[0; 500]; 500];
+
+  // sliding window-- start small and work your way to larger window sizes
+  // by taking into account the smaller pre-computed ones
+  for window in 2..n {
+
+    // minimum of the interval should go through all of the possible mins
+    // for the entire list with the given window size
+    for min in 0..(n-window) {
+      let max = min + window;
+      
+      // for each interval, populate the memo with the largest possible
+      // value for each balloon split. Calculating in reverse order as
+      // to minimize entropy of sub-problems
+      for i in (min+1)..max {
+        memo[min][max] = cmp::max(
+          memo[min][max],
+          memo[min][i] + memo[i][max] + (xs[min] * xs[i] * xs[max])
+        );
+      }
+    }
+  }
+  memo[0][n - 1]
+}
