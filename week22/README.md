@@ -1,6 +1,9 @@
 # It's So Dark
 
 Given you have `N` lights, write these two methods:
+
+(you can use any data structures you want anywhere, as long as it abides by the API specified below)
+
 ```javascript
 
 /**
