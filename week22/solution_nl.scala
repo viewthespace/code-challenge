@@ -5,11 +5,13 @@ case class LightStrandSet(lights: Set[Int] = Set[Int]()) {
   
   def toggle(start: Int, end: Int): LightStrandSet = (start, end) match {
     case (start, end) if start > end => this
-    case (start, end) if lights.contains(start) => LightStrandSet(lights - start).toggle(start + 1, end) 
-    case (start, end) => LightStrandSet(lights + start).toggle(start + 1, end)
+    case (start, end) if lights.contains(start) => this.copy(lights - start).toggle(start + 1, end) 
+    case (start, end) => this.copy(lights + start).toggle(start + 1, end)
   }
 }
 
+
+//Mutable silliness 
 class LightStrandSetMutable {
   
   var lights = Set[Int]()
