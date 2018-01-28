@@ -1,5 +1,5 @@
 # Space complexity: O(N) bits
-# Time complexity:  O(1)
+# Time complexity:  is_on: O(1), toggle: O(1)
 
 class BitLights
   attr_reader :bits
