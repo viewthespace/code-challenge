@@ -42,10 +42,34 @@ def songs_about_rain_v1(elevations)
 end
 
 def songs_about_rain_v2(elevations)
-  # WOMP WOMP
+  heights = {}
+  cur_max_height = 0
+  reservoir = 0
+
+  elevations.each do |cur_height|
+    heights.keys.each do |height|
+      if cur_height > height
+        count = heights.delete(height)
+        fill_height = [cur_max_height, cur_height].min
+        reservoir += count * (fill_height - height)
+        heights[fill_height] ||= 0
+        heights[fill_height] += count
+      end
+    end
+
+    if cur_height >= cur_max_height
+      heights = {}
+      cur_max_height = cur_height
+    elsif cur_height < cur_max_height
+      heights[cur_height] ||= 0
+      heights[cur_height] += 1
+    end
+  end
+
+  reservoir
 end
 
-[:songs_about_rain_v1].each do |method_name|
+[:songs_about_rain_v1, :songs_about_rain_v2].each do |method_name|
   [
     { output: 4, input: [ 1, 3, 4, 2, 3, 5, 4, 5 ] },
     { output: 12, input: [ 1, 2, 2, 4, 1, 2, 1, 3, 1, 5, 1 ] },
