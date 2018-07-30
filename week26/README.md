@@ -10,7 +10,7 @@ Visually, here's what a Knight's tour looks like. The X's denote squares that ha
 
 # Challenge
 
-Write a program that computes a valid Knight's Tour given a starting square on an 8x8 chess board. Here is an example move sequence, with the move number in the position that the Knight was in after that move:
+Write a program that computes a valid Knight's Tour given a starting square on an 8x8 chess board. Here is an example move sequence that started in the top left corner (00). The move number shows the position that the Knight was in after that move (Look for 00 -> 01 -> 02, etc):
 
 ```
 00   59   38   33   30   17   08   63
