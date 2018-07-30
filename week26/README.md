@@ -24,3 +24,23 @@ Write a program that computes a valid Knight's Tour given a starting square on a
 ```
 
 Hint: On an 8x8 chess board, a Knight's Tour will always consist of exactly 64 moves.
+
+# Legal Knight Moves 
+
+For reference, here are the 8 legal moves that a Knight can make from a given square:
+
+![knight-moves](https://user-images.githubusercontent.com/4043433/43399992-841e8ffc-93da-11e8-9316-c4f4bdb15e09.jpg)
+
+In one motion, it can move one of two ways:
+- 2 horizontal spaces and 1 vertical space
+- 1 vertical space and 2 horizontal spaces
+
+It can do each of those in all directions, i.e. 2 horizontal spaces to the right, and 1 vertical space down or 2 vertical spaces down and 1 horizontal space left, resulting in 8 moves. 
+
+It cannot move off of the board.
+
+# Supplemental Information
+
+Here is the song "Night Moves" by Bob Seger: https://www.google.com/search?q=night+moves+bob+seger&oq=night+moves+bob+seger&aqs=chrome..69i57j0l5.2927j0j7&sourceid=chrome&ie=UTF-8
+
+It's not going to help with this problem, but it's a great song :D
