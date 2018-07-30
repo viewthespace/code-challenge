@@ -41,6 +41,6 @@ It cannot move off of the board.
 
 # Supplemental Information
 
-Here is the song "Night Moves" by Bob Seger: https://www.google.com/search?q=night+moves+bob+seger&oq=night+moves+bob+seger&aqs=chrome..69i57j0l5.2927j0j7&sourceid=chrome&ie=UTF-8
+Here is the song "Night Moves" by Bob Seger: https://www.youtube.com/watch?v=BFRVegQZ_r0
 
 It's not going to help with this problem, but it's a great song :D
