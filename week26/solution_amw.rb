@@ -27,21 +27,17 @@ end
 
 def find_tour(position:, visited: {}, solution_path: [])
   solution_path << position
-
-  return true if solution_path.length == N * N
-
   visited[position] = true
-  found_tour = false
+  return true if solution_path.count == N * N
 
   moves_from(position: position).each do |next_position|
     next if visited[next_position]
 
-    found_tour = find_tour(
+    return solution_path if find_tour(
       position: next_position,
       visited: visited,
       solution_path: solution_path
     )
-    return solution_path if found_tour
   end
 
   solution_path.pop
@@ -50,10 +46,9 @@ def find_tour(position:, visited: {}, solution_path: [])
   false
 end
 
-if tour = find_tour(position: Position.new(2, 2))
+start_position = Position.new(2, 2)
+if tour = find_tour(position: start_position)
   puts tour
 else
-  puts 'No tour found from this starting position'
+  puts 'No tour found starting from #{start_position}'
 end
-
-puts "Max length was: #{$max_length}"
