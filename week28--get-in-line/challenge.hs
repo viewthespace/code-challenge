@@ -25,19 +25,21 @@ slopeBetween (Point x1 y1) (Point x2 y2)
 isPointOnLine :: Slope -> Point -> Line -> Bool
 isPointOnLine s p Line { points = points, slope = slope } =
   let (pt1:pt2:_) = points
+      (Point px py) = p
       (Point x1 y1) = pt1
       (Point x2 y2) = pt2
   in slope == s && case slope of
-    Sloped m -> (m * (x2 - x1) - y2 + y1) == 0
-    Vertical -> x1 == x2
-    Horizontal -> y1 == y2
+    Sloped m -> (m * (px - x1) - py + y1) == 0
+    Vertical -> x1 == px
+    Horizontal -> y1 == py
 
 lineSegmentIntoLine :: [Line] -> [Point] -> [Line]
 lineSegmentIntoLine a (pt1:pt2:_) =
   let slope = slopeBetween pt1 pt2
   in case find (isPointOnLine slope pt1) a of
     Just Line { points = points, slope = slope }
-      -> a ++ [Line { points = nub $ points ++ [pt1, pt2], slope = slope }]
+      -> let origLine = Line { points = points, slope = slope }
+         in (filter (\l -> l /= origLine) a) ++ [Line { points = nub $ points ++ [pt1, pt2], slope = slope }]
     Nothing
       ->  a ++ [Line { points = [pt1, pt2], slope = slope }]
 
@@ -54,7 +56,7 @@ formattedLine :: Line -> [Char]
 formattedLine (Line { points = p, slope = s }) =
   let (pt1:_) = p
   in "Point Count: " ++ (show $ length p) ++ " | Slope: "
-    ++ (show s) ++ " | Point: " ++ (show pt1)
+    ++ (show s) ++ " | Points: " ++ (show p)
 
 lineWithMaxPoints :: [(Int, Int)] -> [Char]
 lineWithMaxPoints pts =
@@ -65,7 +67,7 @@ lineWithMaxPoints pts =
 
 pts1 = [(1,1),(2,2),(3,3)]
 pts2 = [(1,1), (3,2), (5,3), (4,1), (2,3), (1,4)]
-horizontalPts = [(1,1), (2,2), (3,1), (4,1), (5, 1), (2,3), (1,4)]
+horizontalPts = [(1,1), (2,2), (3,1), (4,1), (5, 1), (6,1), (7,1), (2,3), (1,4)]
 verticalPts = [(1,1), (2,2), (3,3), (3,1), (1,2), (1,3), (1,4)]
 pts = [pts1, pts2, horizontalPts, verticalPts]
 
