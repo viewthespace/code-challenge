@@ -41,8 +41,8 @@ lineSegmentIntoLine a (pt1:pt2:_) =
     Nothing
       ->  a ++ [Line { points = [pt1, pt2], slope = slope }]
 
-pointCombinations :: [(Int, Int)] -> [[Point]]
-pointCombinations pts =
+allLineSegments :: [(Int, Int)] -> [[Point]]
+allLineSegments pts =
   combinations 2 $
     map (\(x, y) -> Point (fromIntegral(x)) (fromIntegral(y))) pts
 
@@ -61,7 +61,7 @@ lineWithMaxPoints pts =
   formattedLine $
     maximumBy comparePointCount $
     foldl lineSegmentIntoLine [] $
-    pointCombinations pts
+    allLineSegments pts
 
 pts1 = [(1,1),(2,2),(3,3)]
 pts2 = [(1,1), (3,2), (5,3), (4,1), (2,3), (1,4)]
