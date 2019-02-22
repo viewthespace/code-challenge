@@ -1,0 +1,47 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'open3'
+require 'tomlrb'
+
+test_case_file = ARGV[0]
+executable = ARGV[1]
+USAGE = <<STR.freeze
+Usage: #$PROGRAM_NAME <testcase.toml> <executable-under-test>
+STR
+
+def assert_arg(val, msg)
+  if val.nil? || val == ''
+    $stderr.puts(msg)
+    exit(false)
+  end
+end
+assert_arg(test_case_file, USAGE)
+assert_arg(executable, USAGE)
+
+ARGV.replace([])
+require 'rspec/autorun'
+test_cases = Tomlrb.parse(File.read(test_case_file)).fetch('test')
+RSpec.describe executable do
+  define_method(:run) do |input|
+    result = {}
+    Open3.popen3(executable) do |stdin, stdout, stderr, wait_thr|
+      stdin.write(input)
+      stdin.close
+      result[:stdout] = stdout.read
+      result[:stderr] = stderr.read
+      result[:exit_status] = wait_thr.value
+    end
+    result
+  end
+
+  test_cases.each do |name, data|
+    it name do
+      input = data.fetch('input')
+      expected_output = data.fetch('output')
+      result = run(input)
+      expect(result[:exit_status]).to eq(0), result[:stderr]
+      expect(result[:stdout].strip).to eq expected_output.strip
+    end
+  end
+end
