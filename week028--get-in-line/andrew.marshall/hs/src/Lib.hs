@@ -10,7 +10,7 @@ import Data.Maybe
 import Data.Set (Set)
 import qualified Data.Set as Set
 
-data Point = Point {x::Int, y::Int} deriving (Eq, Ord)
+data Point = Point {x::Float, y::Float} deriving (Eq, Ord)
 data Line =
   Function {aSlope :: Float, aYIntercept :: Float}
   | Vertical {aXIntercept :: Float}
@@ -19,19 +19,18 @@ data Line =
 mkPoint [x, y] = Point x y
 
 parse :: String -> [Point]
-parse str = map mkPoint $ (read str :: [[Int]])
+parse str = map mkPoint $ (read str :: [[Float]])
 
 slope :: Point -> Point -> Float
-slope (Point x1 y1) (Point x2 y2) =
-  (fromIntegral $ y1 - y2) / (fromIntegral $ x1 - x2)
+slope (Point x1 y1) (Point x2 y2) = (y1 - y2) / (x1 - x2)
 
 yIntercept :: Point -> Point -> Float
-yIntercept a b = (fromIntegral $ y a) - ((slope a b) * (fromIntegral $ x a))
+yIntercept a b = (y a) - ((slope a b) * (x a))
 
 lineBetween :: Point -> Point -> Line
 lineBetween a b =
   if isInfinite $ slope a b
-  then Vertical $ fromIntegral (x a)
+  then Vertical (x a)
   else Function (slope a b) (yIntercept a b)
 
 combinations :: [a] -> [(a, a)]
