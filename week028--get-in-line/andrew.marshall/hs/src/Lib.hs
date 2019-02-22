@@ -25,12 +25,12 @@ slope :: Point -> Point -> Float
 slope (Point x1 y1) (Point x2 y2) = (y1 - y2) / (x1 - x2)
 
 yIntercept :: Point -> Point -> Float
-yIntercept a b = (y a) - ((slope a b) * (x a))
+yIntercept a@(Point x1 y1) b = y1 - ((slope a b) * x1)
 
 lineBetween :: Point -> Point -> Line
-lineBetween a b =
+lineBetween a@(Point x _) b =
   if isInfinite $ slope a b
-  then Vertical (x a)
+  then Vertical x
   else Function (slope a b) (yIntercept a b)
 
 combinations :: [a] -> [(a, a)]
