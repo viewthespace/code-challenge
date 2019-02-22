@@ -1,4 +1,5 @@
 import Data.List
+import Data.Function
 
 data Slope = Vertical | Horizontal | Sloped Float deriving(Show, Eq)
 
@@ -60,10 +61,11 @@ formattedLine (Line { points = p, slope = s }) =
 
 lineWithMaxPoints :: [(Int, Int)] -> [Char]
 lineWithMaxPoints pts =
-  formattedLine $
-    maximumBy comparePointCount $
-    foldl lineSegmentIntoLine [] $
-    allLineSegments pts
+  pts
+    & allLineSegments
+    & foldl lineSegmentIntoLine []
+    & maximumBy comparePointCount
+    & formattedLine
 
 pts1 = [(1,1),(2,2),(3,3)]
 pts2 = [(1,1), (3,2), (5,3), (4,1), (2,3), (1,4)]
