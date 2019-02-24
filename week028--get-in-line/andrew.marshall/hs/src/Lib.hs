@@ -16,10 +16,9 @@ data Line =
   | Vertical {aXIntercept :: Float}
   deriving (Eq, Ord)
 
-mkPoint [x, y] = Point x y
-
 parse :: String -> [Point]
-parse str = map mkPoint $ (read str :: [[Float]])
+parse str = map mkPoint (read str :: [[Float]])
+  where mkPoint [x, y] = Point x y
 
 slope :: Point -> Point -> Float
 slope (Point x1 y1) (Point x2 y2) = (y1 - y2) / (x1 - x2)
@@ -37,24 +36,17 @@ combinations :: [a] -> [(a, a)]
 combinations [] = []
 combinations (x:xs) = map ((,) x) xs ++ combinations xs
 
-mkMap :: Ord k => (v -> v -> v) -> [(k, v)] -> Map k v
-mkMap combiner = foldl update Map.empty
-  where
-    update m (k, v) = Map.alter (alter v) k m
-    alter v = return . fromMaybe v . fmap (combiner v)
-
-linesOf :: [Point] -> Map.Map Line (Set Point)
+linesOf :: [Point] -> Map Line (Set Point)
 linesOf points =
   points
     & combinations
     & map (\(ptA, ptB) -> (lineBetween ptA ptB, Set.fromList [ptA, ptB]))
-    & mkMap Set.union
+    & Map.fromListWith Set.union
 
 maxLinePoints :: [Point] -> Int
-maxLinePoints [] = 0
 maxLinePoints [_] = 1
 maxLinePoints points =
   points
     & linesOf
     & Map.map Set.size
-    & maximum
+    & foldl max 0
