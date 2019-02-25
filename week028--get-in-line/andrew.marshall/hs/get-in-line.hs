@@ -1,7 +1,5 @@
-module Lib (
-  parse,
-  maxLinePoints
-) where
+#!/usr/bin/env stack
+-- stack --resolver lts-13.8 script --ghc-options -Wall --ghc-options -threaded --ghc-options -rtsopts --ghc-options -with-rtsopts=-N --package containers
 
 import Data.Function
 import Data.Map.Strict (Map)
@@ -50,3 +48,9 @@ maxLinePoints points =
     & linesOf
     & Map.map Set.size
     & foldl max 0
+
+main :: IO ()
+main = do
+  input <- getContents
+  let result = maxLinePoints $ parse input
+  putStrLn $ show result
