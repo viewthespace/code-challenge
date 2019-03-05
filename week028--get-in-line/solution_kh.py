@@ -13,11 +13,11 @@ def maxPoints(self, points):
                 slope = (points[i].y - points[j].y) / (points[i].x - points[j].x)
                 m0[slope] = m0.get(slope, 0) + 1
         
-        local_maxima = 0
+       local_maxima = 0
        
        for k, v in m0.iteritems():
             local_maxima = max(local_maxima, v)
         local_maxima += duplicates
-        
+
         fin = max(local_maxima, fin)
     return fin
