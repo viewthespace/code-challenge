@@ -1,13 +1,12 @@
 class GetInLine
   def initialize(points)
-    @points = points
+    @points = points.uniq
   end
 
   def max_line_points
     return points.length if points.length <= 2
 
     points
-      .uniq
       .sort_by(&:to_s)
       .combination(2)
       .to_a
@@ -38,6 +37,8 @@ class GetInLineTester
   TESTS = [
     { input: [], output: 0 },
     { input: [[1,1]], output: 1 },
+    { input: [[1,1],[1,1]], output: 1 },
+    { input: [[1,1],[1,1],[1,1]], output: 1 },
     { input: [[1,1],[1,2]], output: 2 },
     { input: [[1,1],[1,2],[1,3],[2,2]], output: 3 },
     { input: [[1,1],[2,2],[3,3]], output: 3 },
